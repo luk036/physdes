@@ -1,4 +1,4 @@
-#include "recti.hpp"
+#include <recti/recti.hpp>
 #include <experimental/random>
 #include <iostream>
 #include <list>
@@ -9,7 +9,7 @@ using namespace recti;
 using std::cout;
 
 int main() {
-  std::list<rectangle2D<int>> lst;
+  auto lst = std::list<rectangle2D<int>>{};
 
   for (int i = 0; i < 10; ++i) {
     int ii = i * 100;
