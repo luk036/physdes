@@ -2,15 +2,16 @@
 #define RECTI_HPP
 
 #include <tuple>
+#include <boost/operators.hpp>
 
 namespace recti
 {
 
 /**
- * @brief 
- * 
- * @tparam T1 
- * @tparam T2 
+ * @brief
+ *
+ * @tparam T1
+ * @tparam T2
  */
 template <typename T1, typename T2 = T1>
 struct point2D
@@ -19,28 +20,28 @@ struct point2D
     T2 _y; //!< y coordinate
 
     /**
-     * @brief 
-     * 
-     * @tparam U1 
-     * @tparam U2 
-     * @param rhs 
-     * @return true 
-     * @return false 
+     * @brief
+     *
+     * @tparam U1
+     * @tparam U2
+     * @param rhs
+     * @return true
+     * @return false
      */
     template <typename U1, typename U2>
     bool operator<(const point2D<U1, U2>& rhs) const
     {
-        return std::tie(_x, _y) < std::tie(rhs._x, rhs._y);
+        return std::tie(this->_x, this->_y) < std::tie(rhs._x, rhs._y);
     }
 
     /**
-     * @brief 
-     * 
-     * @return point2D<T2, T1> 
+     * @brief
+     *
+     * @return point2D<T2, T1>
      */
     point2D<T2, T1> flip() const
     {
-        return {_y, _x};
+        return {this->_y, this->_x};
     }
 };
 
@@ -52,7 +53,7 @@ Stream& operator<<(Stream& out, const point2D<T1, T2>& p)
 }
 
 // template deduction guides (C++17)
-// template <typename T1, typename T2 = T1> point2D(T1, T2)->point2D<T1, T2>;
+template <typename T1, typename T2 = T1> point2D(T1, T2)->point2D<T1, T2>;
 
 /**
  * @brief Interval
@@ -61,28 +62,54 @@ Stream& operator<<(Stream& out, const point2D<T1, T2>& p)
  */
 template <typename T>
 struct interval
-{             // requires lower <= upper
+{
+    // requires not(upper < lower)
     T _lower; //> lower bound
     T _upper; //> upper bound
 
-    bool contain(const T& x) const
-    {
-        return !(x < _lower && _upper < x);
-    }
-
+    /**
+     * @brief 
+     * 
+     * @param x 
+     * @return true 
+     * @return false 
+     */
     template <typename U>
-    bool operator<(const interval<U>& rhs) const
+    bool contains(const U& a) const
     {
-        return _upper < rhs._lower;
+        return not(a < this->_lower and this->_upper < a);
     }
 
+    /**
+     * @brief 
+     * 
+     * @tparam U 
+     * @param rhs 
+     * @return true 
+     * @return false 
+     */
     template <typename U>
     bool operator<(const U& rhs) const
     {
-        return _upper < rhs;
+        return this->_upper < rhs;
     }
 };
 
+template <typename T, typename U>
+bool operator<(const U& lhs, const interval<T>& rhs)
+{
+    return lhs < rhs._lower;
+}
+
+/**
+ * @brief 
+ * 
+ * @tparam T 
+ * @param lhs 
+ * @param rhs 
+ * @return true 
+ * @return false 
+ */
 template <typename T>
 bool operator<(const T& lhs, const interval<T>& rhs)
 {
@@ -102,15 +129,16 @@ template <typename T>
 struct rectangle2D : public point2D<interval<T>>
 {
     template <typename U>
-    bool contain(const point2D<U>& rhs) const
+    bool contains(const point2D<U>& rhs) const
     {
-        return this->_x.contain(rhs._x) && this->_y.contain(rhs._y);
+        return this->_x.contains(rhs._x) and this->_y.contains(rhs._y);
     }
 
     point2D<T> lower() const
     {
         return {this->_x._lower, this->_y._lower};
     }
+
     point2D<T> upper() const
     {
         return {this->_x._upper, this->_y._upper};
@@ -137,9 +165,9 @@ template <typename T>
 struct hsegment2D : public point2D<interval<T>, T>
 {
     template <typename U>
-    bool contain(const point2D<U>& rhs) const
+    bool contains(const point2D<U>& rhs) const
     {
-        return this->_x.contain(rhs._x) && this->_y == rhs._y;
+        return this->_x.contains(rhs._x) && this->_y == rhs._y;
     }
 };
 
@@ -147,9 +175,9 @@ template <typename T>
 struct vsegment2D : public point2D<T, interval<T>>
 {
     template <typename U>
-    bool contain(const point2D<U>& rhs) const
+    bool contains(const point2D<U>& rhs) const
     {
-        return this->_y.contain(rhs._y) && this->_x == rhs._x;
+        return this->_y.contains(rhs._y) && this->_x == rhs._x;
     }
 };
 

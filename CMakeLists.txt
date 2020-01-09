@@ -51,14 +51,14 @@ cmake_dependent_option(BP_BUILD_TESTS
 # It is always easier to navigate in an IDE when projects are organized in folders.
 set_property (GLOBAL PROPERTY USE_FOLDERS ON)
 
-set (CMAKE_CXX_STANDARD 17)
+set (CMAKE_CXX_STANDARD 20)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 # Don't use e.g. GNU extension (like -std=gnu++11) for portability
 set(CMAKE_CXX_EXTENSIONS OFF)
 if(MSVC)
-    add_compile_options(/std:c++17 /W3 /WX )
+    add_compile_options(/std:c++2a /W3 /WX )
 else()
-    add_compile_options(-std=c++17 -Wall -Wnon-virtual-dtor -Wunused -pedantic)
+    add_compile_options(-std=c++2a -Wall -Wnon-virtual-dtor -Wunused -pedantic)
 endif()
 
 # set(LIBS ${LIBS} "-L$ENV{CONDA_PREFIX}/lib")
@@ -73,7 +73,7 @@ if (Boost_FOUND)
     message(STATUS "Found boost: ${Boost_INCLUDE_DIRS}")
     set(LIBS ${LIBS} ${Boost_LIBRARIES})
 endif (Boost_FOUND)
-
+ 
 # add_definitions ( -std=c++1z -g)
 # add_subdirectory (third_party EXCLUDE_FROM_ALL)
 

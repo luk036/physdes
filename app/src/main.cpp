@@ -15,8 +15,9 @@ int main() {
     int ii = i * 100;
     for (int j = 0; j < 20; ++j) {
       int jj = j * 100;
-      rectangle2D r{interval{ii, ii + randint(50, 110)},
-                    interval{jj, jj + randint(50, 110)}};
+      auto xx = interval{ii, ii + randint(50, 110)};
+      auto yy = interval{jj, jj + randint(50, 110)};
+      auto r = rectangle2D { xx, yy };
       lst.push_back(r);
     }
   }
@@ -33,10 +34,10 @@ int main() {
     }
   }
 
-  for (const auto &r : S) {
-    cout << "  \\draw " << r << ";\n";
-  }
-  for (const auto &r : L) {
-    cout << "  \\draw[color=red] " << r << ";\n";
-  }
+  // for (const auto &r : S) {
+  //   cout << "  \\draw " << r << ";\n";
+  // }
+  // for (const auto &r : L) {
+  //   cout << "  \\draw[color=red] " << r << ";\n";
+  // }
 }

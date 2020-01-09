@@ -18,7 +18,7 @@ set (LIBRARY_INCLUDE_PATH  "${LIBRARY_MODULE_PATH}/include")
 
 #set includes
 # include_directories (${LIBRARY_INCLUDE_PATH} ${THIRD_PARTY_INCLUDE_PATH})
-include_directories (${LIBRARY_INCLUDE_PATH} ${THIRD_PARTY_INCLUDE_PATH} ${xtensor_INCLUDE_DIRS})
+include_directories (${LIBRARY_INCLUDE_PATH} ${THIRD_PARTY_INCLUDE_PATH} ${Boost_INCLUDE_DIRS})
 
 #set sources
 file (GLOB LIB_HEADER_FILES "${LIBRARY_INCLUDE_PATH}/*.hpp ${LIBRARY_INCLUDE_PATH}/*.h")
@@ -45,10 +45,10 @@ if( NOT cmake_build_type_tolower STREQUAL "coverage"
     # Fix dependency download
     # https://github.com/google/benchmark/issues/564
     #
-    set(BENCHMARK_DOWNLOAD_DEPENDENCIES ON CACHE BOOL "Download dependencies?")
-    include(ConfigGBench)
+    # set(BENCHMARK_DOWNLOAD_DEPENDENCIES ON CACHE BOOL "Download dependencies?")
+    # include(ConfigGBench)
 
-    add_subdirectory (bench)
+    # add_subdirectory (bench)
 endif()
 
 

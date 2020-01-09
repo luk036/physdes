@@ -1,13 +1,42 @@
 #include <catch2/catch.hpp>
-#include <recti/recti.hpp>
 #include <experimental/random>
 #include <iostream>
 #include <list>
+#include <recti/recti.hpp>
 #include <set>
 
 using std::experimental::randint;
 using namespace recti;
 using std::cout;
+
+TEST_CASE("Interval test", "[test_recti.cpp]")
+{
+    auto a = interval{4, 8};
+    auto b = interval{5, 6};
+    CHECK(a < 9);
+    CHECK(a < 8.1);
+    CHECK(3 < a);
+    CHECK(not (a < b));
+    CHECK(not (b < a));
+    CHECK(a.contains(4));
+    CHECK(a.contains(8));
+    CHECK(a.contains(4.5));
+    CHECK(a.contains(b));
+}
+
+TEST_CASE("Rectangle test", "[test_recti.cpp]")
+{
+    auto xrange1 = interval{4, 8};
+    auto yrange1 = interval{5, 7};
+    auto r1 = rectangle2D{xrange1, yrange1};
+    auto xrange2 = interval{5, 7};
+    auto yrange2 = interval{6, 6};
+    auto r2 = rectangle2D{xrange2, yrange2};
+    auto p = point2D{7.1, 6.0};
+
+    CHECK(r1.contains(p));
+    CHECK(r1.contains(r2));
+}
 
 TEST_CASE("Rectilinear test", "[test_recti.cpp]")
 {
@@ -41,12 +70,12 @@ TEST_CASE("Rectilinear test", "[test_recti.cpp]")
         }
     }
 
-    for (const auto& r : S)
-    {
-        cout << "  \\draw " << r << ";\n";
-    }
-    for (const auto& r : L)
-    {
-        cout << "  \\draw[color=red] " << r << ";\n";
-    }
+    // for (const auto& r : S)
+    // {
+    //     cout << "  \\draw " << r << ";\n";
+    // }
+    // for (const auto& r : L)
+    // {
+    //     cout << "  \\draw[color=red] " << r << ";\n";
+    // }
 }
