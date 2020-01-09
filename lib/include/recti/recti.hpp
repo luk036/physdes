@@ -101,20 +101,6 @@ bool operator<(const U& lhs, const interval<T>& rhs)
     return lhs < rhs._lower;
 }
 
-/**
- * @brief 
- * 
- * @tparam T 
- * @param lhs 
- * @param rhs 
- * @return true 
- * @return false 
- */
-template <typename T>
-bool operator<(const T& lhs, const interval<T>& rhs)
-{
-    return lhs < rhs._lower;
-}
 
 // template deduction guides (C++17)
 template <typename T>
