@@ -9,6 +9,20 @@ using std::experimental::randint;
 using namespace recti;
 using std::cout;
 
+template <typename T>
+struct my_point : point2D<T, T>
+{
+    double data;
+};
+
+TEST_CASE("Point test", "[test_recti.cpp]")
+{
+    auto a = my_point<int>{4, 8, 3.4};
+    auto b = my_point<int>{5, 6, 1.0};
+
+    CHECK(a < b);
+}
+
 TEST_CASE("Interval test", "[test_recti.cpp]")
 {
     auto a = interval{4, 8};

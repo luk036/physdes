@@ -95,8 +95,8 @@ struct interval
     }
 };
 
-template <typename T, typename U>
-bool operator<(const U& lhs, const interval<T>& rhs)
+template <typename T>
+bool operator<(const T& lhs, const interval<T>& rhs)
 {
     return lhs < rhs._lower;
 }
