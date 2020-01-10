@@ -18,9 +18,8 @@ class rpolygon : public std::vector<point<T> >
   private:
     /**
      * @brief Construct a new rpolygon object
-     *
-     * @param x
-     * @param y
+     * 
+     * @param pointset 
      */
     rpolygon(std::vector<point<T>> pointset)
         : std::vector<point<T> > {std::move(pointset)}
@@ -29,11 +28,21 @@ class rpolygon : public std::vector<point<T> >
 
   public:
     /**
-     * @brief 
+     * @brief Create an x-monotone object
      * 
+     * @param pointset 
+     * @return rpolygon<T> 
      */
-    static rpolygon<T> create_monotone(std::vector<point<T>> pointset);
+    static rpolygon<T> create_xmonotone(std::vector<point<T>> pointset);
     
+    /**
+     * @brief Create a y-monotone object
+     * 
+     * @param pointset 
+     * @return rpolygon<T> 
+     */
+    static rpolygon<T> create_ymonotone(std::vector<point<T>> pointset);
+
     /**
      * @brief
      *

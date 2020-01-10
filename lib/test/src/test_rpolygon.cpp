@@ -27,7 +27,7 @@ TEST_CASE("Rectilinear Polygon test", "[test_rpolygon.cpp]")
 
     cout << "-------------------------------\n";
 
-    auto R = rpolygon<int>::create_monotone(std::move(S));
+    auto R = rpolygon<int>::create_ymonotone(std::move(S));
 
     cout << R << "\n";
 }
