@@ -27,11 +27,13 @@ TEST_CASE("Interval test", "[test_recti.cpp]")
 {
     auto a = interval {4, 8};
     auto b = interval {5, 6};
+
     CHECK(a < 9);
     CHECK(a < 8.1);
     CHECK(3 < a);
     CHECK(not(a < b));
     CHECK(not(b < a));
+
     CHECK(a.contains(4));
     CHECK(a.contains(8));
     CHECK(a.contains(4.5));

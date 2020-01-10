@@ -1,21 +1,14 @@
-#ifndef RECTI_HPP
-#define RECTI_HPP
+#pragma once
 
 // #include <boost/operators.hpp>
 #include <cassert>
-#include <tuple>
+#include <tuple> // import std::tie()
 
-/**
- * @brief
- *
- * @todo rpolygon
- *
- */
 namespace recti
 {
 
 /**
- * @brief
+ * @brief 2D point
  *
  * @tparam T1
  * @tparam T2
@@ -40,21 +33,41 @@ class point
     {
     }
 
+    /**
+     * @brief
+     *
+     * @return const T1&
+     */
     const T1& x() const
     {
         return this->_x;
     }
 
+    /**
+     * @brief
+     *
+     * @return T1&
+     */
     T1& x()
     {
         return this->_x;
     }
 
+    /**
+     * @brief
+     *
+     * @return const T2&
+     */
     const T2& y() const
     {
         return this->_y;
     }
 
+    /**
+     * @brief
+     *
+     * @return T2&
+     */
     T2& y()
     {
         return this->_y;
@@ -86,6 +99,16 @@ class point
     }
 };
 
+/**
+ * @brief
+ *
+ * @tparam Stream
+ * @tparam T1
+ * @tparam T2
+ * @param out
+ * @param p
+ * @return Stream&
+ */
 template <class Stream, typename T1, typename T2>
 Stream& operator<<(Stream& out, const point<T1, T2>& p)
 {
@@ -93,9 +116,6 @@ Stream& operator<<(Stream& out, const point<T1, T2>& p)
     return out;
 }
 
-// template deduction guides (C++17)
-// template <typename T1, typename T2 = T1>
-// point(T1, T2)->point<T1, T2>;
 
 /**
  * @brief Interval
@@ -106,7 +126,6 @@ template <typename T>
 class interval
 {
   private:
-    // requires not(upper < lower)
     T _lower; //> lower bound
     T _upper; //> upper bound
 
@@ -124,21 +143,41 @@ class interval
         assert(not(_upper < _lower));
     }
 
+    /**
+     * @brief
+     *
+     * @return const T&
+     */
     const T& lower() const
     {
         return this->_lower;
     }
 
+    /**
+     * @brief
+     *
+     * @return T&
+     */
     T& lower()
     {
         return this->_lower;
     }
 
+    /**
+     * @brief
+     *
+     * @return const T&
+     */
     const T& upper() const
     {
         return this->_upper;
     }
 
+    /**
+     * @brief
+     *
+     * @return T&
+     */
     T& upper()
     {
         return this->_upper;
@@ -172,6 +211,15 @@ class interval
     }
 };
 
+/**
+ * @brief
+ *
+ * @tparam T
+ * @param lhs
+ * @param rhs
+ * @return true
+ * @return false
+ */
 template <typename T>
 bool operator<(const T& lhs, const interval<T>& rhs)
 {
@@ -179,19 +227,14 @@ bool operator<(const T& lhs, const interval<T>& rhs)
 }
 
 
-// template deduction guides (C++17)
-// template <typename T>
-// interval(T, T)->interval<T>;
-
 /**
  * @brief Rectangle (Rectilinear)
  *
  * @tparam T
  */
 template <typename T>
-class rectangle : public point<interval<T>>
+struct rectangle : point<interval<T>>
 {
-  public:
     /**
      * @brief Construct a new rectangle object
      *
@@ -203,23 +246,50 @@ class rectangle : public point<interval<T>>
     {
     }
 
+    /**
+     * @brief
+     *
+     * @tparam U
+     * @param rhs
+     * @return true
+     * @return false
+     */
     template <typename U>
     bool contains(const point<U>& rhs) const
     {
         return this->x().contains(rhs.x()) and this->y().contains(rhs.y());
     }
 
+    /**
+     * @brief
+     *
+     * @return point<T>
+     */
     point<T> lower() const
     {
         return {this->x().lower(), this->y().lower()};
     }
 
+    /**
+     * @brief
+     *
+     * @return point<T>
+     */
     point<T> upper() const
     {
         return {this->x().upper(), this->y().upper()};
     }
 };
 
+/**
+ * @brief
+ *
+ * @tparam Stream
+ * @tparam T
+ * @param out
+ * @param r
+ * @return Stream&
+ */
 template <class Stream, typename T>
 Stream& operator<<(Stream& out, const rectangle<T>& r)
 {
@@ -227,9 +297,6 @@ Stream& operator<<(Stream& out, const rectangle<T>& r)
     return out;
 }
 
-// template deduction guides (C++17)
-// template <typename T>
-// rectangle(interval<T>, interval<T>)->rectangle<T>;
 
 /**
  * @brief Horizontal Line Segment
@@ -237,24 +304,61 @@ Stream& operator<<(Stream& out, const rectangle<T>& r)
  * @tparam T
  */
 template <typename T>
-struct hsegment : public point<interval<T>, T>
+struct hsegment : point<interval<T>, T>
 {
+    /**
+     * @brief Construct a new hsegment object
+     *
+     * @param x
+     * @param y
+     */
+    hsegment(interval<T> x, T y)
+        : point<interval<T>, T> {std::move(x), std::move(y)}
+    {
+    }
+
+    /**
+     * @brief
+     *
+     * @tparam U
+     * @param rhs
+     * @return true
+     * @return false
+     */
     template <typename U>
     bool contains(const point<U>& rhs) const
     {
-        return this->x().contains(rhs.x()) && this->y() == rhs.y();
+        return this->y() == rhs.y() and this->x().contains(rhs.x());
     }
 };
 
 template <typename T>
-struct vsegment : public point<T, interval<T>>
+struct vsegment : point<T, interval<T>>
 {
+    /**
+     * @brief Construct a new vsegment object
+     *
+     * @param x
+     * @param y
+     */
+    vsegment(T x, interval<T> y)
+        : point<T, interval<T>> {std::move(x), std::move(y)}
+    {
+    }
+
+    /**
+     * @brief
+     *
+     * @tparam U
+     * @param rhs
+     * @return true
+     * @return false
+     */
     template <typename U>
     bool contains(const point<U>& rhs) const
     {
-        return this->y().contains(rhs.y()) && this->x() == rhs.x();
+        return this->x() == rhs.x() and this->y().contains(rhs.y());
     }
 };
 
 } // namespace recti
-#endif
