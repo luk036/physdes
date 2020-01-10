@@ -1,9 +1,16 @@
 #ifndef RECTI_HPP
 #define RECTI_HPP
 
+// #include <boost/operators.hpp>
+#include <cassert>
 #include <tuple>
-#include <boost/operators.hpp>
 
+/**
+ * @brief
+ *
+ * @todo rpolygon
+ *
+ */
 namespace recti
 {
 
@@ -14,10 +21,44 @@ namespace recti
  * @tparam T2
  */
 template <typename T1, typename T2 = T1>
-struct point2D
+class point
 {
+  private:
     T1 _x; //!< x coordinate
     T2 _y; //!< y coordinate
+
+  public:
+    /**
+     * @brief Construct a new point object
+     *
+     * @param x
+     * @param y
+     */
+    point(T1 x, T2 y)
+        : _x {std::move(x)}
+        , _y {std::move(y)}
+    {
+    }
+
+    const T1& x() const
+    {
+        return this->_x;
+    }
+
+    T1& x()
+    {
+        return this->_x;
+    }
+
+    const T2& y() const
+    {
+        return this->_y;
+    }
+
+    T2& y()
+    {
+        return this->_y;
+    }
 
     /**
      * @brief
@@ -29,31 +70,32 @@ struct point2D
      * @return false
      */
     template <typename U1, typename U2>
-    bool operator<(const point2D<U1, U2>& rhs) const
+    bool operator<(const point<U1, U2>& rhs) const
     {
-        return std::tie(this->_x, this->_y) < std::tie(rhs._x, rhs._y);
+        return std::tie(this->x(), this->y()) < std::tie(rhs.x(), rhs.y());
     }
 
     /**
      * @brief
      *
-     * @return point2D<T2, T1>
+     * @return point<T2, T1>
      */
-    point2D<T2, T1> flip() const
+    point<T2, T1> flip() const
     {
-        return {this->_y, this->_x};
+        return {this->y(), this->x()};
     }
 };
 
 template <class Stream, typename T1, typename T2>
-Stream& operator<<(Stream& out, const point2D<T1, T2>& p)
+Stream& operator<<(Stream& out, const point<T1, T2>& p)
 {
-    out << '(' << p._x / 100.0 << ", " << p._y / 100.0 << ')';
+    out << '(' << p.x() / 100.0 << ", " << p.y() / 100.0 << ')';
     return out;
 }
 
 // template deduction guides (C++17)
-template <typename T1, typename T2 = T1> point2D(T1, T2)->point2D<T1, T2>;
+// template <typename T1, typename T2 = T1>
+// point(T1, T2)->point<T1, T2>;
 
 /**
  * @brief Interval
@@ -61,50 +103,85 @@ template <typename T1, typename T2 = T1> point2D(T1, T2)->point2D<T1, T2>;
  * @tparam T
  */
 template <typename T>
-struct interval
+class interval
 {
+  private:
     // requires not(upper < lower)
     T _lower; //> lower bound
     T _upper; //> upper bound
 
+  public:
     /**
-     * @brief 
-     * 
-     * @param x 
-     * @return true 
-     * @return false 
+     * @brief Construct a new interval object
+     *
+     * @param lower
+     * @param upper
+     */
+    interval(T lower, T upper)
+        : _lower {std::move(lower)}
+        , _upper {std::move(upper)}
+    {
+        assert(not(_upper < _lower));
+    }
+
+    const T& lower() const
+    {
+        return this->_lower;
+    }
+
+    T& lower()
+    {
+        return this->_lower;
+    }
+
+    const T& upper() const
+    {
+        return this->_upper;
+    }
+
+    T& upper()
+    {
+        return this->_upper;
+    }
+
+    /**
+     * @brief
+     *
+     * @param x
+     * @return true
+     * @return false
      */
     template <typename U>
     bool contains(const U& a) const
     {
-        return not(a < this->_lower and this->_upper < a);
+        return not(a < this->lower() and this->upper() < a);
     }
 
     /**
-     * @brief 
-     * 
-     * @tparam U 
-     * @param rhs 
-     * @return true 
-     * @return false 
+     * @brief
+     *
+     * @tparam U
+     * @param rhs
+     * @return true
+     * @return false
      */
     template <typename U>
     bool operator<(const U& rhs) const
     {
-        return this->_upper < rhs;
+        return this->upper() < rhs;
     }
 };
 
 template <typename T>
 bool operator<(const T& lhs, const interval<T>& rhs)
 {
-    return lhs < rhs._lower;
+    return lhs < rhs.lower();
 }
 
 
 // template deduction guides (C++17)
-template <typename T>
-interval(T, T)->interval<T>;
+// template <typename T>
+// interval(T, T)->interval<T>;
 
 /**
  * @brief Rectangle (Rectilinear)
@@ -112,35 +189,47 @@ interval(T, T)->interval<T>;
  * @tparam T
  */
 template <typename T>
-struct rectangle2D : public point2D<interval<T>>
+class rectangle : public point<interval<T>>
 {
+  public:
+    /**
+     * @brief Construct a new rectangle object
+     *
+     * @param x
+     * @param y
+     */
+    rectangle(interval<T> x, interval<T> y)
+        : point<interval<T>> {std::move(x), std::move(y)}
+    {
+    }
+
     template <typename U>
-    bool contains(const point2D<U>& rhs) const
+    bool contains(const point<U>& rhs) const
     {
-        return this->_x.contains(rhs._x) and this->_y.contains(rhs._y);
+        return this->x().contains(rhs.x()) and this->y().contains(rhs.y());
     }
 
-    point2D<T> lower() const
+    point<T> lower() const
     {
-        return {this->_x._lower, this->_y._lower};
+        return {this->x().lower(), this->y().lower()};
     }
 
-    point2D<T> upper() const
+    point<T> upper() const
     {
-        return {this->_x._upper, this->_y._upper};
+        return {this->x().upper(), this->y().upper()};
     }
 };
 
 template <class Stream, typename T>
-Stream& operator<<(Stream& out, const rectangle2D<T>& r)
+Stream& operator<<(Stream& out, const rectangle<T>& r)
 {
     out << r.lower() << " rectangle " << r.upper();
     return out;
 }
 
 // template deduction guides (C++17)
-template <typename T>
-rectangle2D(interval<T>, interval<T>)->rectangle2D<T>;
+// template <typename T>
+// rectangle(interval<T>, interval<T>)->rectangle<T>;
 
 /**
  * @brief Horizontal Line Segment
@@ -148,22 +237,22 @@ rectangle2D(interval<T>, interval<T>)->rectangle2D<T>;
  * @tparam T
  */
 template <typename T>
-struct hsegment2D : public point2D<interval<T>, T>
+struct hsegment : public point<interval<T>, T>
 {
     template <typename U>
-    bool contains(const point2D<U>& rhs) const
+    bool contains(const point<U>& rhs) const
     {
-        return this->_x.contains(rhs._x) && this->_y == rhs._y;
+        return this->x().contains(rhs.x()) && this->y() == rhs.y();
     }
 };
 
 template <typename T>
-struct vsegment2D : public point2D<T, interval<T>>
+struct vsegment : public point<T, interval<T>>
 {
     template <typename U>
-    bool contains(const point2D<U>& rhs) const
+    bool contains(const point<U>& rhs) const
     {
-        return this->_y.contains(rhs._y) && this->_x == rhs._x;
+        return this->y().contains(rhs.y()) && this->x() == rhs.x();
     }
 };
 

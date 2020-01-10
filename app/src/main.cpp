@@ -9,7 +9,7 @@ using namespace recti;
 using std::cout;
 
 int main() {
-  auto lst = std::list<rectangle2D<int>>{};
+  auto lst = std::list<rectangle<int>>{};
 
   for (int i = 0; i < 10; ++i) {
     int ii = i * 100;
@@ -17,13 +17,13 @@ int main() {
       int jj = j * 100;
       auto xx = interval{ii, ii + randint(50, 110)};
       auto yy = interval{jj, jj + randint(50, 110)};
-      auto r = rectangle2D { xx, yy };
+      auto r = rectangle { xx, yy };
       lst.push_back(r);
     }
   }
 
-  std::set<rectangle2D<int>> S;  // set of maximal non-overlapped rectangles
-  std::list<rectangle2D<int>> L; // list of the removed rectangles
+  std::set<rectangle<int>> S;  // set of maximal non-overlapped rectangles
+  std::list<rectangle<int>> L; // list of the removed rectangles
 
   for (const auto &r : lst) {
     auto search = S.find(r);
