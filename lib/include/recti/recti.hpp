@@ -16,7 +16,7 @@ namespace recti
 template <typename T1, typename T2 = T1>
 class point
 {
-  private:
+  protected:
     T1 _x; //!< x coordinate
     T2 _y; //!< y coordinate
 
@@ -100,6 +100,58 @@ class point
 };
 
 /**
+ * @brief 2D point
+ *
+ * @tparam T1
+ * @tparam T2
+ */
+template <typename T1, typename T2 = T1>
+class dualpoint : public point<T1, T2>
+{
+  public:
+    /**
+     * @brief
+     *
+     * @return const T1&
+     */
+    const T1& y() const // override intentionally
+    {
+        return this->_x;
+    }
+
+    /**
+     * @brief
+     *
+     * @return T1&
+     */
+    T1& y() // override intentionally
+    {
+        return this->_x;
+    }
+
+    /**
+     * @brief
+     *
+     * @return const T2&
+     */
+    const T2& x() const // override intentionally
+    {
+        return this->_y;
+    }
+
+    /**
+     * @brief
+     *
+     * @return T2&
+     */
+    T2& x() // override intentionally
+    {
+        return this->_y;
+    }
+};
+
+
+/**
  * @brief
  *
  * @tparam Stream
@@ -181,6 +233,16 @@ class interval
     T& upper()
     {
         return this->_upper;
+    }
+
+    /**
+     * @brief
+     *
+     * @return auto
+     */
+    T len() const
+    {
+        return this->upper() - this->lower();
     }
 
     /**
@@ -278,6 +340,11 @@ struct rectangle : point<interval<T>>
     point<T> upper() const
     {
         return {this->x().upper(), this->y().upper()};
+    }
+
+    T area() const
+    {
+        return this->x().len() * this->y().len();
     }
 };
 

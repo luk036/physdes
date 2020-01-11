@@ -17,7 +17,7 @@ TEST_CASE("Rectilinear Polygon test", "[test_rpolygon.cpp]")
 
     for (auto i = 0U; i != N; ++i)
     {
-        S.push_back({randint(-100, 99), randint(-100, 99)});
+        S.push_back({randint(-100, 100), randint(-100, 100)});
     }
 
     for (auto&& r : S)
@@ -26,8 +26,10 @@ TEST_CASE("Rectilinear Polygon test", "[test_rpolygon.cpp]")
     }
 
     cout << "-------------------------------\n";
+    auto R1 = rpolygon<int>::create_xmonotone(S);
+    cout << R1.area() << "\n";
 
-    auto R = rpolygon<int>::create_ymonotone(std::move(S));
-
-    cout << R << "\n";
+    cout << "-------------------------------\n";
+    auto R2 = rpolygon<int>::create_ymonotone(S);
+    cout << R2.area() << "\n";
 }

@@ -13,35 +13,42 @@ namespace recti
  * @tparam T
  */
 template <typename T>
-class rpolygon : public std::vector<point<T> >
+class rpolygon : public std::vector<point<T>>
 {
   private:
     /**
      * @brief Construct a new rpolygon object
-     * 
-     * @param pointset 
+     *
+     * @param pointset
      */
     rpolygon(std::vector<point<T>> pointset)
-        : std::vector<point<T> > {std::move(pointset)}
+        : std::vector<point<T>> {std::move(pointset)}
     {
     }
 
   public:
     /**
      * @brief Create an x-monotone object
-     * 
-     * @param pointset 
-     * @return rpolygon<T> 
+     *
+     * @param pointset
+     * @return rpolygon<T>
      */
     static rpolygon<T> create_xmonotone(std::vector<point<T>> pointset);
-    
+
     /**
      * @brief Create a y-monotone object
-     * 
-     * @param pointset 
-     * @return rpolygon<T> 
+     *
+     * @param pointset
+     * @return rpolygon<T>
      */
     static rpolygon<T> create_ymonotone(std::vector<point<T>> pointset);
+
+    /**
+     * @brief area
+     *
+     * @return auto
+     */
+    T area() const;
 
     /**
      * @brief
