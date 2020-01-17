@@ -44,6 +44,14 @@ class rpolygon : public std::vector<point<T>>
     static rpolygon<T> create_ymonotone(std::vector<point<T>> pointset);
 
     /**
+     * @brief Create a regular object
+     *
+     * @param pointset
+     * @return rpolygon<T>
+     */
+    static rpolygon<T> create_regular(std::vector<point<T>> pointset);
+
+    /**
      * @brief area
      *
      * @return auto
