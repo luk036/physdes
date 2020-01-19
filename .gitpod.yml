@@ -1,0 +1,3 @@
+tasks:
+  - init: cmake .
+image: gitpod/workspace-full
