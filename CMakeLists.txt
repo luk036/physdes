@@ -65,8 +65,8 @@ endif()
 
 set (THREADS_PREFER_PTHREAD_FLAG ON)
 find_package (Threads REQUIRED)
-find_package (fmt REQUIRED)
-find_package (spdlog REQUIRED)
+# find_package (fmt REQUIRED)
+# find_package (spdlog REQUIRED)
 
 find_package (Boost REQUIRED COMPONENTS context coroutine)
 if (Boost_FOUND)

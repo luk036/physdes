@@ -1,0 +1,20 @@
+tasks:
+- init: >
+    mkdir -p $HOME/.cache &&
+    touch $HOME/.cache/mydependency.so &&
+    wget "http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh" -O miniconda.sh &&
+    export CONDA_PREFIX=$HOME/miniconda &&
+    bash miniconda.sh -b -p $CONDA_PREFIX &&
+    export PATH="$CONDA_PREFIX/bin:$PATH" &&
+    hash -r &&
+    conda config --set always_yes yes --set changeps1 no &&
+    conda update -q conda &&
+    conda info -a &&
+    conda install catch2 -c conda-forge &&
+    conda install ninja &&
+    conda install libboost
+- command: >
+    mkdir build && cd build &&
+    cmake -GNinja ..
+image:
+  file: .gitpod.Dockerfile
