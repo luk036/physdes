@@ -2,8 +2,12 @@ image:
   file: .gitpod.Dockerfile
 tasks:
   - init: >
-      chmod +x envconfig.sh
+      chmod +x envconfig.sh &&
       ./envconfig.sh
   - command: >
-      export CMAKE_PREFIX=/workspace/conda/arcw
+      export CMAKE_PREFIX=/workspace/conda/arcw &&
       conda activate $CMAKE_PREFIX
+
+vscode:
+  extensions:
+    - gocarlos.cmake-tools@1.5.2:nUO/opvJVLgFgKq+tbOX6A==
