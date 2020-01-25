@@ -7,7 +7,6 @@
 
 using std::experimental::randint;
 using namespace recti;
-using std::cout;
 
 template <typename T>
 struct my_point : point<T, T>
@@ -67,8 +66,8 @@ TEST_CASE("Rectilinear test", "[test_recti.cpp]")
             int jj = j * 100;
             auto xrng = interval {ii, ii + randint(50, 110)};
             auto yrng = interval {jj, jj + randint(50, 110)};
-            auto r = rectangle {std::move(xrng), std::move(yrng)};
-            lst.push_back(std::move(r));
+            auto r = rectangle {xrng, yrng};
+            lst.push_back(r);
         }
     }
 
