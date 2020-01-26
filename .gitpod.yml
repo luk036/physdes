@@ -3,7 +3,7 @@ image:
 tasks:
   - command: >
       chmod +x envconfig.sh &&
-      ./envconfig.sh
+      ./envconfig.sh &&
       export CONDA_PREFIX=/opt/conda
 
 vscode:
