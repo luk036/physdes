@@ -155,4 +155,4 @@ namespace recti
 // Instantiation
 template class rpolygon<int>;
 
-} // end recti::
+} // namespace recti
