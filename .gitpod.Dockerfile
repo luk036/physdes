@@ -31,7 +31,10 @@ RUN chown -R gitpod:gitpod /opt/conda \
     && chmod -R 777 /home/gitpod/.conda
 
 RUN hash -r \
-    && conda config --set always_yes yes --set changeps1 no \
+    && export CONDA_PREFIX=/opt/conda \
+    && export PATH=$CONDA_PREFIX/bin:$PATH 
+
+RUN conda config --set always_yes yes --set changeps1 no \
     && conda update -q conda \
     && conda info -a \
     && conda install -y ninja \
