@@ -30,4 +30,14 @@ RUN chown -R gitpod:gitpod /opt/conda \
     && chown -R gitpod:gitpod /home/gitpod/.conda \
     && chmod -R 777 /home/gitpod/.conda
 
+RUN hash -r \
+    && conda config --set always_yes yes --set changeps1 no \
+    && conda update -q conda \
+    && conda info -a \
+    && conda install -y ninja \
+    && conda install -y -c conda-forge \
+        catch2 \
+        libboost \
+        cppcheck
+
 RUN apt-get clean && rm -rf /var/cache/apt/* && rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
