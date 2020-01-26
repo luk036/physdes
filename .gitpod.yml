@@ -3,8 +3,8 @@ image:
 tasks:
   - command: >
       chmod +x envconfig.sh &&
-      ./envconfig.sh &&
-      export CMAKE_PREFIX=/opt/conda
+      ./envconfig.sh
+      export CONDA_PREFIX=/opt/conda
 
 vscode:
   extensions:
