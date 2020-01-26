@@ -5,8 +5,7 @@ tasks:
       chmod +x envconfig.sh &&
       ./envconfig.sh
   - command: >
-      export CMAKE_PREFIX=/workspace/conda/arcw &&
-      conda activate $CMAKE_PREFIX
+      export CMAKE_PREFIX=/opt/conda
 
 vscode:
   extensions:
