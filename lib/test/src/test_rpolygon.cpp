@@ -1,11 +1,11 @@
 #include <catch2/catch.hpp>
-#include <experimental/random>
+// #include <random>
 #include <iostream>
 #include <recti/recti.hpp>
 #include <recti/rpolygon.hpp>
 #include <vector>
 
-using std::experimental::randint;
+// using std::randint;
 using namespace recti;
 using std::cout;
 
@@ -17,7 +17,8 @@ TEST_CASE("Rectilinear Polygon test", "[test_rpolygon.cpp]")
 
     for (auto i = 0U; i != N; ++i)
     {
-        S.emplace_back(point<int>{randint(-100, 100), randint(-100, 100)});
+        // S.emplace_back(point<int>{randint(-100, 100), randint(-100, 100)});
+        S.emplace_back(point<int>{std::rand() % 100, std::rand() % 100});
     }
 
     for (auto&& r : S)

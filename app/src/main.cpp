@@ -1,10 +1,10 @@
 #include <recti/recti.hpp>
-#include <experimental/random>
+// #include <random>
 #include <iostream>
 #include <list>
 #include <set>
 
-using std::experimental::randint;
+// using std::randint;
 using namespace recti;
 using std::cout;
 
@@ -15,8 +15,10 @@ int main() {
     int ii = i * 100;
     for (int j = 0; j < 20; ++j) {
       int jj = j * 100;
-      auto xx = interval{ii, ii + randint(50, 110)};
-      auto yy = interval{jj, jj + randint(50, 110)};
+      // auto xx = interval{ii, ii + randint(50, 110)};
+      // auto yy = interval{jj, jj + randint(50, 110)};
+      auto xx = interval{ii, ii + std::rand() % 100};
+      auto yy = interval{jj, jj + std::rand() % 100};
       auto r = rectangle { xx, yy };
       lst.push_back(r);
     }

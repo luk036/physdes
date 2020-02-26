@@ -192,7 +192,7 @@ class interval
         : _lower {std::move(lower)}
         , _upper {std::move(upper)}
     {
-        assert(not(_upper < _lower));
+        assert(!(_upper < _lower));
     }
 
     /**
@@ -255,7 +255,7 @@ class interval
     template <typename U>
     bool contains(const U& a) const
     {
-        return not(a < this->lower() and this->upper() < a);
+        return !(a < this->lower() && this->upper() < a);
     }
 
     /**
@@ -319,7 +319,7 @@ struct rectangle : point<interval<T>>
     template <typename U>
     bool contains(const point<U>& rhs) const
     {
-        return this->x().contains(rhs.x()) and this->y().contains(rhs.y());
+        return this->x().contains(rhs.x()) && this->y().contains(rhs.y());
     }
 
     /**
@@ -395,7 +395,7 @@ struct hsegment : point<interval<T>, T>
     template <typename U>
     bool contains(const point<U>& rhs) const
     {
-        return this->y() == rhs.y() and this->x().contains(rhs.x());
+        return this->y() == rhs.y() && this->x().contains(rhs.x());
     }
 };
 
@@ -424,7 +424,7 @@ struct vsegment : point<T, interval<T>>
     template <typename U>
     bool contains(const point<U>& rhs) const
     {
-        return this->x() == rhs.x() and this->y().contains(rhs.y());
+        return this->x() == rhs.x() && this->y().contains(rhs.y());
     }
 };
 

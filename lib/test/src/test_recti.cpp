@@ -1,11 +1,11 @@
 #include <catch2/catch.hpp>
-#include <experimental/random>
+// #include <random>
 #include <iostream>
 #include <list>
 #include <recti/recti.hpp>
 #include <set>
 
-using std::experimental::randint;
+// using std::randint;
 using namespace recti;
 
 template <typename T>
@@ -30,8 +30,8 @@ TEST_CASE("Interval test", "[test_recti.cpp]")
     CHECK(a < 9);
     CHECK(a < 8.1);
     CHECK(3 < a);
-    CHECK(not(a < b));
-    CHECK(not(b < a));
+    CHECK(!(a < b));
+    CHECK(!(b < a));
 
     CHECK(a.contains(4));
     CHECK(a.contains(8));
@@ -64,8 +64,10 @@ TEST_CASE("Rectilinear test", "[test_recti.cpp]")
         for (auto j = 0U; j != N; ++j)
         {
             int jj = j * 100;
-            auto xrng = interval {ii, ii + randint(50, 110)};
-            auto yrng = interval {jj, jj + randint(50, 110)};
+            // auto xrng = interval {ii, ii + randint(50, 110)};
+            // auto yrng = interval {jj, jj + randint(50, 110)};
+            auto xrng = interval{ii, ii + std::rand() % 100};
+            auto yrng = interval{jj, jj + std::rand() % 100};
             auto r = rectangle {xrng, yrng};
             lst.push_back(r);
         }

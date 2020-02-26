@@ -68,7 +68,7 @@ find_package (Threads REQUIRED)
 # find_package (fmt REQUIRED)
 # find_package (spdlog REQUIRED)
 
-find_package (Boost REQUIRED COMPONENTS context coroutine)
+find_package (Boost REQUIRED)
 if (Boost_FOUND)
     message(STATUS "Found boost: ${Boost_INCLUDE_DIRS}")
     set(LIBS ${LIBS} ${Boost_LIBRARIES})
