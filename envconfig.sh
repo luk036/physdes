@@ -20,7 +20,7 @@ conda config --set always_yes yes --set changeps1 no
 conda update -q conda
 conda info -a
 conda install -y ninja
-conda install -y -c conda-forge catch2
+# conda install -y -c conda-forge catch2
 conda install -y -c conda-forge libboost
 conda install -y -c conda-forge cppcheck
 

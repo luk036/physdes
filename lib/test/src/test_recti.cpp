@@ -1,4 +1,4 @@
-#include <catch2/catch.hpp>
+#include <doctest.h>
 // #include <random>
 #include <iostream>
 #include <list>
@@ -14,7 +14,7 @@ struct my_point : point<T, T>
     double data;
 };
 
-TEST_CASE("Point test", "[test_recti.cpp]")
+TEST_CASE("Point test")
 {
     auto a = my_point<int> {{4, 8}, 3.4};
     auto b = my_point<int> {{5, 6}, 1.0};
@@ -22,7 +22,7 @@ TEST_CASE("Point test", "[test_recti.cpp]")
     CHECK(a < b);
 }
 
-TEST_CASE("Interval test", "[test_recti.cpp]")
+TEST_CASE("Interval test")
 {
     auto a = interval {4, 8};
     auto b = interval {5, 6};
@@ -39,7 +39,7 @@ TEST_CASE("Interval test", "[test_recti.cpp]")
     CHECK(a.contains(b));
 }
 
-TEST_CASE("Rectangle test", "[test_recti.cpp]")
+TEST_CASE("Rectangle test")
 {
     auto xrng1 = interval {4, 8};
     auto yrng1 = interval {5, 7};
@@ -53,7 +53,7 @@ TEST_CASE("Rectangle test", "[test_recti.cpp]")
     CHECK(r1.contains(r2));
 }
 
-TEST_CASE("Rectilinear test", "[test_recti.cpp]")
+TEST_CASE("Rectilinear test")
 {
     constexpr auto N = 20U;
     auto lst = std::list<rectangle<int>> {};

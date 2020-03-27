@@ -6,11 +6,11 @@ RUN apt-get update \
  && apt-get install -y \
   apt-utils \
   sudo \
+  aria2 \
   git \
   less \
-  libfmt-dev \
-  libspdlog-dev \
   lcov \
+  neofetch \
   wget
 
 RUN mkdir -p /workspace/data \
@@ -23,7 +23,8 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86
     rm ~/miniconda.sh && \
     ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
-    echo "conda activate base" >> ~/.bashrc
+    echo "conda activate base" >> ~/.bashrc && \
+    conda install -c conda-forge fmt spdlog
     
 RUN chown -R gitpod:gitpod /opt/conda \
     && chmod -R 777 /opt/conda \

@@ -1,4 +1,4 @@
-#include <catch2/catch.hpp>
+#include <doctest.h>
 // #include <random>
 #include <iostream>
 #include <recti/recti.hpp>
@@ -9,7 +9,7 @@
 using namespace recti;
 using std::cout;
 
-TEST_CASE("Rectilinear Polygon test", "[test_rpolygon.cpp]")
+TEST_CASE("Rectilinear Polygon test")
 {
     constexpr auto N = 100;
     auto S = std::vector<point<int>> {};
