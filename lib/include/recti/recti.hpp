@@ -82,11 +82,13 @@ class point
      * @return true
      * @return false
      */
-    template <typename U1, typename U2>
-    bool operator<(const point<U1, U2>& rhs) const
-    {
-        return std::tie(this->x(), this->y()) < std::tie(rhs.x(), rhs.y());
-    }
+    // template <typename U1, typename U2>
+    // bool operator<(const point<U1, U2>& rhs) const
+    // {
+    //     return std::tie(this->x(), this->y()) < std::tie(rhs.x(), rhs.y());
+    // }
+
+    auto operator<=>(const point<T1, T2>& rhs) const = default;
 
     /**
      * @brief
@@ -245,6 +247,12 @@ class interval
         return this->upper() - this->lower();
     }
 
+    template <typename U>
+    bool contains(const interval<U>& a) const
+    {
+        return this->lower() < a.lower() && a.upper() < this->upper();
+    }
+
     /**
      * @brief
      *
@@ -252,10 +260,9 @@ class interval
      * @return true
      * @return false
      */
-    template <typename U>
-    bool contains(const U& a) const
+    bool contains(const T& a) const
     {
-        return !(a < this->lower() && this->upper() < a);
+        return this->lower() < a && a < this->upper();
     }
 
     /**
@@ -266,11 +273,13 @@ class interval
      * @return true
      * @return false
      */
-    template <typename U>
-    bool operator<(const U& rhs) const
+    bool operator<(const T& rhs) const
     {
         return this->upper() < rhs;
     }
+
+    auto operator<=>(const interval<T>& rhs) const = default;
+
 };
 
 /**
