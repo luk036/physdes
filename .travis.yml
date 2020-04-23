@@ -8,20 +8,21 @@ cache: # see https://docs.travis-ci.com/user/caching/
 matrix:
   include:
     - os: linux
-      addons: &gcc10
+      addons: &gcc9
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - g++-10
+            - gcc-9
+            - g++-9
             - lcov
-      env: COMPILER=gcc GCC=10 BLAS=OpenBLAS BUILD_TYPE='Debug'
+      env: COMPILER=gcc GCC=9 BLAS=OpenBLAS BUILD_TYPE='Debug'
     - os: linux
-      addons: *gcc10
-      env: COMPILER=gcc GCC=10 BLAS=OpenBLAS BUILD_TYPE='Release'
+      addons: *gcc9
+      env: COMPILER=gcc GCC=9 BLAS=OpenBLAS BUILD_TYPE='Release'
     - os: linux
-      addons: *gcc10
-      env: COMPILER=gcc GCC=10 BLAS=OpenBLAS BUILD_TYPE='Coverage'
+      addons: *gcc9
+      env: COMPILER=gcc GCC=9 BLAS=OpenBLAS BUILD_TYPE='Coverage'
     - os: linux
       addons: &clang10
         apt:
@@ -32,16 +33,8 @@ matrix:
             - lcov
       env: COMPILER=clang CLANG=10 BLAS=OpenBLAS BUILD_TYPE='Debug'
     - os: linux
-      addons: *clang9
+      addons: *clang10
       env: COMPILER=clang CLANG=10 BLAS=OpenBLAS BUILD_TYPE='Release'
-    - os: osx
-      osx_image: xcode11
-      addons:
-        homebrew:
-          packages:
-          - lcov
-          update: true
-      env: COMPILER=clang CLANG=9 BUILD_TYPE='Release'
 
 env:
   global:
