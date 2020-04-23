@@ -1,5 +1,5 @@
 language: cpp
-dist: bionic
+dist: focal
 
 cache: # see https://docs.travis-ci.com/user/caching/
   - directories:
@@ -7,21 +7,6 @@ cache: # see https://docs.travis-ci.com/user/caching/
 
 matrix:
   include:
-    - os: linux
-      addons: &gcc7
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-7
-            - lcov
-      env: COMPILER=gcc GCC=7 BLAS=OpenBLAS BUILD_TYPE='Debug'
-    - os: linux
-      addons: *gcc7
-      env: COMPILER=gcc GCC=7 BLAS=OpenBLAS BUILD_TYPE='Release'
-    - os: linux
-      addons: *gcc7
-      env: COMPILER=gcc GCC=7 BLAS=OpenBLAS BUILD_TYPE='Coverage'
     - os: linux
       addons: &gcc10
         apt:
@@ -35,17 +20,20 @@ matrix:
       addons: *gcc10
       env: COMPILER=gcc GCC=10 BLAS=OpenBLAS BUILD_TYPE='Release'
     - os: linux
-      addons: &clang9
+      addons: *gcc10
+      env: COMPILER=gcc GCC=10 BLAS=OpenBLAS BUILD_TYPE='Coverage'
+    - os: linux
+      addons: &clang10
         apt:
-          sources: ['llvm-toolchain-bionic-9', 'ubuntu-toolchain-r-test']
+          sources: ['llvm-toolchain-bionic-10', 'ubuntu-toolchain-r-test']
           packages:
-            - clang-9
-            - libc++-9-dev
+            - clang-10
+            - libc++-10-dev
             - lcov
-      env: COMPILER=clang CLANG=9 BLAS=OpenBLAS BUILD_TYPE='Debug'
+      env: COMPILER=clang CLANG=10 BLAS=OpenBLAS BUILD_TYPE='Debug'
     - os: linux
       addons: *clang9
-      env: COMPILER=clang CLANG=9 BLAS=OpenBLAS BUILD_TYPE='Release'
+      env: COMPILER=clang CLANG=10 BLAS=OpenBLAS BUILD_TYPE='Release'
     - os: osx
       osx_image: xcode11
       addons:
@@ -72,6 +60,7 @@ before_install:
         export CXX=clang++-$CLANG CC=clang-$CLANG;
       fi
     elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      export MACOSX_DEPLOYMENT_TARGET=10.14
       export CXX=clang++ CC=clang;
     fi
 
