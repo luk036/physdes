@@ -11,6 +11,8 @@ RUN apt-get update \
   less \
   lcov \
   neofetch \
+  vifm \
+  w3m \
   wget
 
 RUN mkdir -p /workspace/data \
