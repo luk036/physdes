@@ -247,10 +247,27 @@ class interval
         return this->upper() - this->lower();
     }
 
+    // auto operator<=>(const interval<T>& rhs) const = default;
+    std::partial_ordering operator<=>(const interval<T>& rhs) const {
+        if (this->upper() == rhs.upper() && this->lower() == rhs.lower())
+        {
+            return std::partial_ordering::equivalent;
+        }
+        if (this->upper() < rhs.lower())
+        {
+            return std::partial_ordering::less;
+        }
+        if (this->lower() > rhs.upper())
+        {
+            return std::partial_ordering::greater;
+        }
+        return std::partial_ordering::unordered;
+    }
+
     template <typename U>
     bool contains(const interval<U>& a) const
     {
-        return this->lower() < a.lower() && a.upper() < this->upper();
+        return !(a.lower() < this->lower() || this->upper() < a.upper());
     }
 
     /**
@@ -262,7 +279,7 @@ class interval
      */
     bool contains(const T& a) const
     {
-        return this->lower() < a && a < this->upper();
+        return !(a < this->lower() || this->upper() < a);
     }
 
     /**
@@ -277,8 +294,6 @@ class interval
     {
         return this->upper() < rhs;
     }
-
-    auto operator<=>(const interval<T>& rhs) const = default;
 
 };
 
