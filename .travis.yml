@@ -8,21 +8,21 @@ cache: # see https://docs.travis-ci.com/user/caching/
 matrix:
   include:
     - os: linux
-      addons: &gcc9
+      addons: &gcc10
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - gcc-9
-            - g++-9
+            - gcc-10
+            - g++-10
             - lcov
-      env: COMPILER=gcc GCC=9 BLAS=OpenBLAS BUILD_TYPE='Debug'
+      env: COMPILER=gcc GCC=10 BLAS=OpenBLAS BUILD_TYPE='Debug'
     - os: linux
-      addons: *gcc9
-      env: COMPILER=gcc GCC=9 BLAS=OpenBLAS BUILD_TYPE='Release'
+      addons: *gcc10
+      env: COMPILER=gcc GCC=10 BLAS=OpenBLAS BUILD_TYPE='Release'
     - os: linux
-      addons: *gcc9
-      env: COMPILER=gcc GCC=9 BLAS=OpenBLAS BUILD_TYPE='Coverage'
+      addons: *gcc10
+      env: COMPILER=gcc GCC=10 BLAS=OpenBLAS BUILD_TYPE='Coverage'
     - os: linux
       addons: &clang10
         apt:
@@ -41,21 +41,6 @@ env:
     - MINCONDA_VERSION="latest"
     - MINCONDA_LINUX="Linux-x86_64"
     - MINCONDA_OSX="MacOSX-x86_64"
-
-before_install:
-  - |
-    # Configure build variables
-    if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-      if [[ "$COMPILER" == "gcc" ]]; then
-        export CXX=g++-$GCC CC=gcc-$GCC;
-      fi
-      if [[ "$COMPILER" == "clang" ]]; then
-        export CXX=clang++-$CLANG CC=clang-$CLANG;
-      fi
-    elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-      export MACOSX_DEPLOYMENT_TARGET=10.14
-      export CXX=clang++ CC=clang;
-    fi
 
 install:
   - |
