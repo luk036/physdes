@@ -18,7 +18,7 @@ TEST_CASE("Rectilinear Polygon test")
     for (auto i = 0U; i != N; ++i)
     {
         // S.emplace_back(point<int>{randint(-100, 100), randint(-100, 100)});
-        S.emplace_back(point<int>{std::rand() % 100, std::rand() % 100});
+        S.emplace_back(point<int> {std::rand() % 100, std::rand() % 100});
     }
 
     for (auto&& r : S)

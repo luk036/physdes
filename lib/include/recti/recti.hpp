@@ -27,7 +27,7 @@ class point
      * @param x
      * @param y
      */
-    point(T1 x, T2 y)
+    constexpr point(T1 x, T2 y)
         : _x {std::move(x)}
         , _y {std::move(y)}
     {
@@ -38,7 +38,7 @@ class point
      *
      * @return const T1&
      */
-    const T1& x() const
+    constexpr const T1& x() const
     {
         return this->_x;
     }
@@ -48,7 +48,7 @@ class point
      *
      * @return T1&
      */
-    T1& x()
+    constexpr T1& x()
     {
         return this->_x;
     }
@@ -58,7 +58,7 @@ class point
      *
      * @return const T2&
      */
-    const T2& y() const
+    constexpr const T2& y() const
     {
         return this->_y;
     }
@@ -68,7 +68,7 @@ class point
      *
      * @return T2&
      */
-    T2& y()
+    constexpr T2& y()
     {
         return this->_y;
     }
@@ -88,14 +88,14 @@ class point
     //     return std::tie(this->x(), this->y()) < std::tie(rhs.x(), rhs.y());
     // }
 
-    auto operator<=>(const point<T1, T2>& rhs) const = default;
+    constexpr auto operator<=>(const point<T1, T2>& rhs) const = default;
 
     /**
      * @brief
      *
      * @return point<T2, T1>
      */
-    point<T2, T1> flip() const
+    constexpr point<T2, T1> flip() const
     {
         return {this->y(), this->x()};
     }
@@ -116,7 +116,7 @@ class dualpoint : public point<T1, T2>
      *
      * @return const T1&
      */
-    const T1& y() const // override intentionally
+    constexpr const T1& y() const // override intentionally
     {
         return this->_x;
     }
@@ -126,7 +126,7 @@ class dualpoint : public point<T1, T2>
      *
      * @return T1&
      */
-    T1& y() // override intentionally
+    constexpr T1& y() // override intentionally
     {
         return this->_x;
     }
@@ -136,7 +136,7 @@ class dualpoint : public point<T1, T2>
      *
      * @return const T2&
      */
-    const T2& x() const // override intentionally
+    constexpr const T2& x() const // override intentionally
     {
         return this->_y;
     }
@@ -146,10 +146,16 @@ class dualpoint : public point<T1, T2>
      *
      * @return T2&
      */
-    T2& x() // override intentionally
+    constexpr T2& x() // override intentionally
     {
         return this->_y;
     }
+
+    /**
+     * @brief ???
+     *
+     */
+    constexpr auto operator<=>(const dualpoint<T1, T2>& rhs) const = default;
 };
 
 
@@ -190,7 +196,7 @@ class interval
      * @param lower
      * @param upper
      */
-    interval(T lower, T upper)
+    constexpr interval(T lower, T upper)
         : _lower {std::move(lower)}
         , _upper {std::move(upper)}
     {
@@ -202,7 +208,7 @@ class interval
      *
      * @return const T&
      */
-    const T& lower() const
+    constexpr const T& lower() const
     {
         return this->_lower;
     }
@@ -212,7 +218,7 @@ class interval
      *
      * @return T&
      */
-    T& lower()
+    constexpr T& lower()
     {
         return this->_lower;
     }
@@ -222,7 +228,7 @@ class interval
      *
      * @return const T&
      */
-    const T& upper() const
+    constexpr const T& upper() const
     {
         return this->_upper;
     }
@@ -232,7 +238,7 @@ class interval
      *
      * @return T&
      */
-    T& upper()
+    constexpr T& upper()
     {
         return this->_upper;
     }
@@ -242,13 +248,25 @@ class interval
      *
      * @return auto
      */
-    T len() const
+    constexpr T len() const
     {
         return this->upper() - this->lower();
     }
 
+    /**
+     * @brief
+     *
+     * @param rhs
+     * @return true
+     * @return false
+     */
+    constexpr bool operator==(const interval<T>& rhs) const = default;
+
     // auto operator<=>(const interval<T>& rhs) const = default;
-    std::partial_ordering operator<=>(const interval<T>& rhs) const {
+
+    template <typename U>
+    constexpr std::partial_ordering operator<=>(const interval<U>& rhs) const
+    {
         if (this->upper() == rhs.upper() && this->lower() == rhs.lower())
         {
             return std::partial_ordering::equivalent;
@@ -262,10 +280,11 @@ class interval
             return std::partial_ordering::greater;
         }
         return std::partial_ordering::unordered;
+        // return std::partial_ordering::equivalent;
     }
 
     template <typename U>
-    bool contains(const interval<U>& a) const
+    constexpr bool contains(const interval<U>& a) const
     {
         return !(a.lower() < this->lower() || this->upper() < a.upper());
     }
@@ -277,7 +296,7 @@ class interval
      * @return true
      * @return false
      */
-    bool contains(const T& a) const
+    constexpr bool contains(const T& a) const
     {
         return !(a < this->lower() || this->upper() < a);
     }
@@ -285,16 +304,14 @@ class interval
     /**
      * @brief
      *
-     * @tparam U
      * @param rhs
      * @return true
      * @return false
      */
-    bool operator<(const T& rhs) const
+    constexpr bool operator<(const T& rhs) const
     {
         return this->upper() < rhs;
     }
-
 };
 
 /**
@@ -307,7 +324,7 @@ class interval
  * @return false
  */
 template <typename T>
-bool operator<(const T& lhs, const interval<T>& rhs)
+constexpr bool operator<(const T& lhs, const interval<T>& rhs)
 {
     return lhs < rhs.lower();
 }
@@ -327,7 +344,7 @@ struct rectangle : point<interval<T>>
      * @param x
      * @param y
      */
-    rectangle(interval<T> x, interval<T> y)
+    constexpr rectangle(interval<T> x, interval<T> y)
         : point<interval<T>> {std::move(x), std::move(y)}
     {
     }
@@ -341,7 +358,7 @@ struct rectangle : point<interval<T>>
      * @return false
      */
     template <typename U>
-    bool contains(const point<U>& rhs) const
+    constexpr bool contains(const point<U>& rhs) const
     {
         return this->x().contains(rhs.x()) && this->y().contains(rhs.y());
     }
@@ -351,7 +368,7 @@ struct rectangle : point<interval<T>>
      *
      * @return point<T>
      */
-    point<T> lower() const
+    constexpr point<T> lower() const
     {
         return {this->x().lower(), this->y().lower()};
     }
@@ -361,12 +378,12 @@ struct rectangle : point<interval<T>>
      *
      * @return point<T>
      */
-    point<T> upper() const
+    constexpr point<T> upper() const
     {
         return {this->x().upper(), this->y().upper()};
     }
 
-    T area() const
+    constexpr T area() const
     {
         return this->x().len() * this->y().len();
     }
@@ -403,7 +420,7 @@ struct hsegment : point<interval<T>, T>
      * @param x
      * @param y
      */
-    hsegment(interval<T> x, T y)
+    constexpr hsegment(interval<T> x, T y)
         : point<interval<T>, T> {std::move(x), std::move(y)}
     {
     }
@@ -417,7 +434,7 @@ struct hsegment : point<interval<T>, T>
      * @return false
      */
     template <typename U>
-    bool contains(const point<U>& rhs) const
+    constexpr bool contains(const point<U>& rhs) const
     {
         return this->y() == rhs.y() && this->x().contains(rhs.x());
     }
@@ -432,7 +449,7 @@ struct vsegment : point<T, interval<T>>
      * @param x
      * @param y
      */
-    vsegment(T x, interval<T> y)
+    constexpr vsegment(T x, interval<T> y)
         : point<T, interval<T>> {std::move(x), std::move(y)}
     {
     }
@@ -446,7 +463,7 @@ struct vsegment : point<T, interval<T>>
      * @return false
      */
     template <typename U>
-    bool contains(const point<U>& rhs) const
+    constexpr bool contains(const point<U>& rhs) const
     {
         return this->x() == rhs.x() && this->y().contains(rhs.y());
     }

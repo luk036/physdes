@@ -20,6 +20,11 @@ TEST_CASE("Point test")
     auto b = my_point<int> {{5, 6}, 1.0};
 
     CHECK(a < b);
+    CHECK(a <= b);
+    CHECK(!(a == b));
+    CHECK(a != b);
+    CHECK(b > a);
+    CHECK(b >= a);
 }
 
 TEST_CASE("Interval test")
@@ -27,15 +32,24 @@ TEST_CASE("Interval test")
     auto a = interval {4, 8};
     auto b = interval {5, 6};
 
+    CHECK(!(a < b));
+    CHECK(!(b < a));
+    CHECK(!(a > b));
+    CHECK(!(b > a));
+    CHECK(!(a <= b));
+    CHECK(!(b <= a));
+    CHECK(!(a >= b));
+    CHECK(!(b >= a));
+
+    CHECK(!(b == a));
+    CHECK(b != a);
+
     CHECK(a < 9);
     // CHECK(a < 8.1);
     CHECK(3 < a);
-    CHECK(!(a < b));
-    CHECK(!(b < a));
 
     CHECK(a.contains(4));
     CHECK(a.contains(8));
-    CHECK(a.contains(4.5));
     CHECK(a.contains(b));
 }
 
@@ -66,8 +80,8 @@ TEST_CASE("Rectilinear test")
             int jj = j * 100;
             // auto xrng = interval {ii, ii + randint(50, 110)};
             // auto yrng = interval {jj, jj + randint(50, 110)};
-            auto xrng = interval{ii, ii + std::rand() % 100};
-            auto yrng = interval{jj, jj + std::rand() % 100};
+            auto xrng = interval {ii, ii + std::rand() % 100};
+            auto yrng = interval {jj, jj + std::rand() % 100};
             auto r = rectangle {xrng, yrng};
             lst.push_back(r);
         }
