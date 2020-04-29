@@ -20,7 +20,6 @@ TEST_CASE("Fraction")
 {
     // using boost::multiprecision::cpp_int;
     // static_assert(Integral<cpp_int>);
-
     const auto a = 3;
     const auto b = 4;
     const auto c = 5;
@@ -66,6 +65,6 @@ TEST_CASE("Fraction Special Cases")
     CHECK(nan == nan * nan);
     CHECK(inf == inf + inf);
     CHECK(nan == inf - inf);
-    CHECK( inf + p == inf ); // ???
-    CHECK( -inf + p == -inf ); // ???
+    CHECK(inf + p == inf);   // ???
+    CHECK(-inf + p == -inf); // ???
 }

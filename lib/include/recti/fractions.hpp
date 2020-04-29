@@ -142,7 +142,8 @@ struct Fraction
             return _Self(_numerator + frac._numerator, _denominator);
         }
         auto d = _denominator * frac._denominator;
-        auto n = frac._denominator * _numerator + _denominator * frac._numerator;
+        auto n =
+            frac._denominator * _numerator + _denominator * frac._numerator;
         return _Self(n, d);
     }
 
@@ -336,15 +337,17 @@ struct Fraction
 
     constexpr auto operator<=>(const Fraction<Z>& rhs) const
     {
-        if (this->_denominator == rhs._denominator) {
+        if (this->_denominator == rhs._denominator)
+        {
             return this->_numerator <=> rhs._numerator;
         }
-        return (this->_numerator * rhs._denominator) <=> (this->_denominator * rhs._numerator);
+        return (this->_numerator * rhs._denominator) <=>
+            (this->_denominator * rhs._numerator);
     }
 
     /**
-     * @brief 
-     * 
+     * @brief
+     *
      */
     constexpr auto operator<=>(const Z& rhs) const
     {
