@@ -3,6 +3,8 @@
 // #include <boost/operators.hpp>
 #include <cassert>
 #include <tuple> // import std::tie()
+#include <boost/operators.hpp>
+#include "vector2.hpp"
 
 namespace recti
 {
@@ -15,6 +17,10 @@ namespace recti
  */
 template <typename T1, typename T2 = T1>
 class point
+    : boost::addable2<point<T1,T1>, vector2<T1>          // point + vector2
+    , boost::subtractable2<point<T1,T1>, vector2<T1>     // point - vector2
+    , boost::totally_ordered< point<T1, T2>
+      > > >
 {
   protected:
     T1 _x; //!< x coordinate
@@ -38,7 +44,7 @@ class point
      *
      * @return const T1&
      */
-    constexpr const T1& x() const
+    constexpr auto x() const -> const T1&
     {
         return this->_x;
     }
@@ -48,7 +54,7 @@ class point
      *
      * @return T1&
      */
-    constexpr T1& x()
+    constexpr auto x() -> T1&
     {
         return this->_x;
     }
@@ -58,7 +64,7 @@ class point
      *
      * @return const T2&
      */
-    constexpr const T2& y() const
+    constexpr auto y() const -> const T2&
     {
         return this->_y;
     }
@@ -68,7 +74,7 @@ class point
      *
      * @return T2&
      */
-    constexpr T2& y()
+    constexpr auto y() -> T2&
     {
         return this->_y;
     }
@@ -82,20 +88,33 @@ class point
      * @return true
      * @return false
      */
-    // template <typename U1, typename U2>
-    // bool operator<(const point<U1, U2>& rhs) const
-    // {
-    //     return std::tie(this->x(), this->y()) < std::tie(rhs.x(), rhs.y());
-    // }
+    template <typename U1, typename U2>
+    constexpr bool operator<(const point<U1, U2>& rhs) const
+    {
+        return std::tie(this->x(), this->y()) < std::tie(rhs.x(), rhs.y());
+    }
 
-    constexpr auto operator<=>(const point<T1, T2>& rhs) const = default;
+    /**
+     * @brief
+     *
+     * @tparam U1
+     * @tparam U2
+     * @param rhs
+     * @return true
+     * @return false
+     */
+    template <typename U1, typename U2>
+    constexpr bool operator==(const point<U1, U2>& rhs) const
+    {
+        return this->x() == rhs.x() && this->y() == rhs.y();
+    }
 
     /**
      * @brief
      *
      * @return point<T2, T1>
      */
-    constexpr point<T2, T1> flip() const
+    constexpr auto flip() const -> point<T2, T1>
     {
         return {this->y(), this->x()};
     }
@@ -150,12 +169,6 @@ class dualpoint : public point<T1, T2>
     {
         return this->_y;
     }
-
-    /**
-     * @brief ???
-     *
-     */
-    constexpr auto operator<=>(const dualpoint<T1, T2>& rhs) const = default;
 };
 
 
@@ -184,6 +197,7 @@ Stream& operator<<(Stream& out, const point<T1, T2>& p)
  */
 template <typename T>
 class interval
+    : boost::totally_ordered< interval<T> >
 {
   private:
     T _lower; //> lower bound
@@ -260,28 +274,16 @@ class interval
      * @return true
      * @return false
      */
-    constexpr bool operator==(const interval<T>& rhs) const = default;
-
-    // auto operator<=>(const interval<T>& rhs) const = default;
-
-    template <typename U>
-    constexpr std::partial_ordering operator<=>(const interval<U>& rhs) const
+    constexpr bool operator==(const interval& rhs) const
     {
-        if (this->upper() == rhs.upper() && this->lower() == rhs.lower())
-        {
-            return std::partial_ordering::equivalent;
-        }
-        if (this->upper() < rhs.lower())
-        {
-            return std::partial_ordering::less;
-        }
-        if (this->lower() > rhs.upper())
-        {
-            return std::partial_ordering::greater;
-        }
-        return std::partial_ordering::unordered;
-        // return std::partial_ordering::equivalent;
+        return this->lower() == rhs.lower() && this->upper() == rhs.upper();
     }
+
+    constexpr bool operator<(const interval& rhs) const
+    {
+        return this->upper() < rhs.lower();
+    }
+
 
     template <typename U>
     constexpr bool contains(const interval<U>& a) const
@@ -300,34 +302,7 @@ class interval
     {
         return !(a < this->lower() || this->upper() < a);
     }
-
-    /**
-     * @brief
-     *
-     * @param rhs
-     * @return true
-     * @return false
-     */
-    constexpr bool operator<(const T& rhs) const
-    {
-        return this->upper() < rhs;
-    }
 };
-
-/**
- * @brief
- *
- * @tparam T
- * @param lhs
- * @param rhs
- * @return true
- * @return false
- */
-template <typename T>
-constexpr bool operator<(const T& lhs, const interval<T>& rhs)
-{
-    return lhs < rhs.lower();
-}
 
 
 /**

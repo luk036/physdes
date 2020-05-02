@@ -236,7 +236,7 @@ struct Fraction
      * @param[in] frac
      * @return _Self
      */
-    constexpr _Self operator+=(const _Self& frac)
+    constexpr _Self& operator+=(const _Self& frac)
     {
         return *this = *this + frac;
     }
@@ -247,7 +247,7 @@ struct Fraction
      * @param[in] frac
      * @return _Self
      */
-    constexpr _Self operator-=(const _Self& frac)
+    constexpr _Self& operator-=(const _Self& frac)
     {
         return *this = *this - frac;
     }
@@ -258,7 +258,7 @@ struct Fraction
      * @param[in] frac
      * @return _Self
      */
-    constexpr _Self operator*=(const _Self& frac)
+    constexpr _Self& operator*=(const _Self& frac)
     {
         return *this = *this * frac;
     }
@@ -269,7 +269,7 @@ struct Fraction
      * @param[in] frac
      * @return _Self
      */
-    constexpr _Self operator/=(const _Self& frac)
+    constexpr _Self& operator/=(const _Self& frac)
     {
         return *this = *this / frac;
     }

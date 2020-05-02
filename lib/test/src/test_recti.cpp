@@ -36,17 +36,13 @@ TEST_CASE("Interval test")
     CHECK(!(b < a));
     CHECK(!(a > b));
     CHECK(!(b > a));
-    CHECK(!(a <= b));
-    CHECK(!(b <= a));
-    CHECK(!(a >= b));
-    CHECK(!(b >= a));
+    CHECK(a <= b);
+    CHECK(b <= a);
+    CHECK(a >= b);
+    CHECK(b >= a);
 
     CHECK(!(b == a));
     CHECK(b != a);
-
-    CHECK(a < 9);
-    // CHECK(a < 8.1);
-    CHECK(3 < a);
 
     CHECK(a.contains(4));
     CHECK(a.contains(8));
