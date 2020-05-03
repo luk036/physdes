@@ -8,6 +8,7 @@
 #include <cmath>
 #include <numeric>
 #include <type_traits>
+#include <boost/operators.hpp>
 
 namespace fun
 {
@@ -42,6 +43,9 @@ constexpr _Mn lcm(_Mn __m, _Mn __n)
 
 template <typename Z>
 struct Fraction
+    : boost::totally_ordered<Fraction<Z>
+    , boost::totally_ordered<Fraction<Z>, Z
+    > >
 {
     using _Self = Fraction<Z>;
 
@@ -68,17 +72,9 @@ struct Fraction
      */
     constexpr explicit Fraction(const Z& numerator)
         : _numerator {numerator}
-        , _denominator {1}
+        , _denominator (1)
     {
     }
-
-    /*!
-     * @brief Construct a new Fraction object
-     *
-     */
-    constexpr Fraction() = default;
-    // Fraction(const _Self &) = delete;
-    // Fraction(_Self &&) = default;
 
     /*!
      * @brief
@@ -333,15 +329,23 @@ struct Fraction
         return _numerator * frac._denominator - _denominator * frac._numerator;
     }
 
-    constexpr bool operator==(const Fraction<Z>& rhs) const = default;
-
-    constexpr auto operator<=>(const Fraction<Z>& rhs) const
+    constexpr bool operator==(const Fraction<Z>& rhs) const
     {
-        if (this->_denominator == rhs._denominator)
+        if (this -> _denominator == rhs._denominator)
         {
-            return this->_numerator <=> rhs._numerator;
+            return this->_numerator == rhs._numerator;
         }
-        return (this->_numerator * rhs._denominator) <=>
+        return (this->_numerator * rhs._denominator) ==
+            (this->_denominator * rhs._numerator);        
+    }
+
+    constexpr bool operator<(const Fraction<Z>& rhs) const
+    {
+        if (this -> _denominator == rhs._denominator)
+        {
+            return this->_numerator < rhs._numerator;
+        }
+        return (this->_numerator * rhs._denominator) <
             (this->_denominator * rhs._numerator);
     }
 
@@ -349,21 +353,50 @@ struct Fraction
      * @brief
      *
      */
-    constexpr auto operator<=>(const Z& rhs) const
+    constexpr bool operator==(const Z& rhs) const
     {
-        return this->_numerator <=> (this->_denominator * rhs);
+        return this->_denominator == Z(1) && this->_numerator == rhs;
     }
 
-    /*!
+    /**
      * @brief
      *
-     * @return double
      */
-    constexpr explicit operator double()
+    constexpr bool operator<(const Z& rhs) const
     {
-        return double(_numerator) / _denominator;
+        return this->_numerator < (this->_denominator * rhs);
     }
+
+    /**
+     * @brief
+     *
+     */
+    constexpr bool operator>(const Z& rhs) const
+    {
+        return this->_numerator > (this->_denominator * rhs);
+    }
+
+    // /*!
+    //  * @brief
+    //  *
+    //  * @return double
+    //  */
+    // constexpr explicit operator double()
+    // {
+    //     return double(_numerator) / _denominator;
+    // }
+
+    // /**
+    //  * @brief
+    //  *
+    //  */
+    // friend constexpr bool operator<(const Z& lhs, const Fraction<Z>& rhs)
+    // {
+    //     return lhs * rhs.denominator() < rhs.numerator();
+    // }
+
 };
+
 
 /*!
  * @brief

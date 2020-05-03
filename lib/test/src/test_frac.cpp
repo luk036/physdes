@@ -29,15 +29,20 @@ TEST_CASE("Fraction")
     // const auto z = 0;
     // const auto h = -g;
 
-    const auto p = Fraction {a, b};
+    auto p = Fraction {a, b};
     std::cout << p << '\n';
     const auto q = Fraction {c, d};
 
     CHECK(p == Fraction(30, 40));
+    p *= 2;
+    CHECK(p == Fraction(6, 4));
+
+    p /= 2;
     CHECK(p + q == Fraction(19, 12));
     CHECK(p - q == Fraction(-1, 12));
     CHECK(p < q);
-    CHECK(p > 0);
+    CHECK(p != q);
+    CHECK(0 < p);
 }
 
 TEST_CASE("Fraction Special Cases")

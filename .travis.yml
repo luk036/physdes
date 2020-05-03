@@ -8,6 +8,18 @@ cache: # see https://docs.travis-ci.com/user/caching/
 matrix:
   include:
     - os: linux
+      addons: &gcc7
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+            - lcov
+      env: COMPILER=gcc GCC=7 BUILD_TYPE='Debug'
+    - os: linux
+      addons: *gcc7
+      env: COMPILER=gcc GCC=7 BUILD_TYPE='Release'
+    - os: linux
       addons: &gcc10
         apt:
           sources:

@@ -10,7 +10,8 @@ template <class T>
 class vector2                      // note: private inheritance is OK here!
     : boost::field_operators<vector2<T>
     , boost::field_operators<vector2<T>, T // vector2 + vector2
-    > >
+    , boost::totally_ordered<vector2<T>
+    > > >
 {
   public:
     vector2(T x, T y) : _x{std::move(x)}, _y{std::move(y)} {}
