@@ -16,6 +16,18 @@ TEST_CASE("undefined behavior")
     std::cout << "125 >> 32 = " << b << "\n";
 }
 
+TEST_CASE("GCD")
+{
+    CHECK(gcd(0, 0) == 0);
+    CHECK(gcd(1, 0) == 1);
+    CHECK(gcd(0, 1) == 1);
+    CHECK(gcd(-1, 0) == 1);
+    CHECK(gcd(0, -1) == 1);
+    CHECK(lcm(0, 0) == 0);
+    CHECK(lcm(1, 0) == 0);
+    CHECK(lcm(0, 1) == 0);
+}
+
 TEST_CASE("Fraction")
 {
     // using boost::multiprecision::cpp_int;
@@ -34,6 +46,7 @@ TEST_CASE("Fraction")
     const auto q = Fraction {c, d};
 
     CHECK(p == Fraction(30, 40));
+    CHECK(p * 2 == Fraction(6, 4));
     p *= 2;
     CHECK(p == Fraction(6, 4));
 
