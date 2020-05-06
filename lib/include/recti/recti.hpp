@@ -332,8 +332,7 @@ struct rectangle : point<interval<T>>
      * @return true
      * @return false
      */
-    template <typename U>
-    constexpr bool contains(const point<U>& rhs) const
+    constexpr bool contains(const point<T>& rhs) const
     {
         return this->x().contains(rhs.x()) && this->y().contains(rhs.y());
     }
