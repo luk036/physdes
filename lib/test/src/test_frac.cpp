@@ -46,9 +46,10 @@ TEST_CASE("Fraction")
     const auto q = Fraction {c, d};
 
     CHECK(p == Fraction(30, 40));
-    CHECK(p * 2 == Fraction(6, 4));
+    CHECK(2 * p == Fraction(6, 4));
     p *= 2;
     CHECK(p == Fraction(6, 4));
+    CHECK(p / 2 == Fraction(30, 40));
 
     p /= 2;
     CHECK(p + q == Fraction(19, 12));
@@ -85,4 +86,6 @@ TEST_CASE("Fraction Special Cases")
     CHECK(nan == inf - inf);
     CHECK(inf + p == inf);   // ???
     CHECK(-inf + p == -inf); // ???
+    CHECK(p + zero == p);
+
 }

@@ -5,10 +5,10 @@
  *  This is a C++ Library header.
  */
 
+#include <boost/operators.hpp>
 #include <cmath>
 #include <numeric>
 #include <type_traits>
-#include <boost/operators.hpp>
 
 namespace fun
 {
@@ -42,11 +42,10 @@ constexpr _Mn lcm(_Mn __m, _Mn __n)
 }
 
 template <typename Z>
-struct Fraction
-    : boost::totally_ordered<Fraction<Z>
-    , boost::totally_ordered<Fraction<Z>, Z
-    , boost::multipliable<Fraction<Z>, Z
-    > > >
+struct Fraction : boost::totally_ordered<Fraction<Z>,
+                      boost::totally_ordered<Fraction<Z>, Z,
+                          boost::multipliable<Fraction<Z>, Z,
+                              boost::dividable<Fraction<Z>, Z>>>>
 {
     Z _numerator;
     Z _denominator;
@@ -57,22 +56,16 @@ struct Fraction
      * @param[in] numerator
      * @param[in] denominator
      */
-    constexpr Fraction(const Z& numerator, const Z& denominator)
+    constexpr Fraction(Z numerator, Z denominator)
+        : _numerator {std::move(numerator)}
+        , _denominator {std::move(denominator)}
     {
-        const auto common = gcd(numerator, denominator);
-        if (common == Z(0))
-        {
-            this->_numerator = this->_denominator = Z(0);
-            return;
-        }
-        this->_numerator = numerator / common;
-        this->_denominator = denominator / common;
-
-        if (this->_denominator < Z(0))
-        {
-            this->_numerator = -this->_numerator;
-            this->_denominator = -this->_denominator;
-        }
+        auto common = gcd(numerator, denominator);
+        if (common == Z(1)) return;
+        if (common == Z(0)) [[unlikely]] return; // both num and den are zero
+        if (denominator < Z(0)) common = -common;
+        this->_numerator /= common;
+        this->_denominator /= common;
     }
 
     /*!
@@ -82,7 +75,7 @@ struct Fraction
      */
     constexpr explicit Fraction(const Z& numerator)
         : _numerator {numerator}
-        , _denominator (1)
+        , _denominator(1)
     {
     }
 
@@ -132,7 +125,9 @@ struct Fraction
      */
     constexpr Fraction operator-() const
     {
-        return Fraction(-_numerator, _denominator);
+        auto res = Fraction(*this);
+        res._numerator = -res._numerator;
+        return res;
     }
 
     /*!
@@ -174,7 +169,7 @@ struct Fraction
     {
         auto n = _numerator * frac._numerator;
         auto d = _denominator * frac._denominator;
-        return Fraction(n, d);
+        return Fraction(std::move(n), std::move(d));
     }
 
     /*!
@@ -198,7 +193,7 @@ struct Fraction
     constexpr Fraction operator+(const Z& i) const
     {
         auto n = _numerator + _denominator * i;
-        return Fraction(n, _denominator);
+        return Fraction(std::move(n), _denominator);
     }
 
     /*!
@@ -224,17 +219,17 @@ struct Fraction
     //     return Fraction(n, _denominator);
     // }
 
-    /*!
-     * @brief
-     *
-     * @param[in] i
-     * @return Fraction
-     */
-    constexpr Fraction operator/(const Z& i) const
-    {
-        auto d = _denominator * i;
-        return Fraction(_numerator, d);
-    }
+    // /*!
+    //  * @brief
+    //  *
+    //  * @param[in] i
+    //  * @return Fraction
+    //  */
+    // constexpr Fraction operator/(const Z& i) const
+    // {
+    //     auto d = _denominator * i;
+    //     return Fraction(_numerator, d);
+    // }
 
     /*!
      * @brief
@@ -311,14 +306,13 @@ struct Fraction
     constexpr Fraction& operator*=(const Z& i)
     {
         const auto common = gcd(i, this->_denominator);
-        if (common == Z(0))
-        {
-            this->_numerator = this->_denominator = Z(0);
-            return *this;
-        }
         if (common == Z(1))
         {
             this->_numerator *= i;
+        }
+        else if (common == Z(0)) [[unlikely]] // both i and den are zero
+        {
+            this->_numerator = Z(0);
         }
         else
         {
@@ -336,7 +330,21 @@ struct Fraction
      */
     constexpr Fraction& operator/=(const Z& i)
     {
-        return *this = *this / i;
+        const auto common = gcd(this->_numerator, i);
+        if (common == Z(1))
+        {
+            this->_denominator *= i;
+        }
+        else if (common == Z(0)) [[unlikely]] // both i and num are zero
+        {
+            this->_denominator = Z(0);
+        }
+        else
+        {
+            this->_denominator *= (i / common);
+            this->_numerator /= common;
+        }
+        return *this;
     }
 
     /*!
@@ -356,20 +364,22 @@ struct Fraction
 
     constexpr bool operator==(const Fraction<Z>& rhs) const
     {
-        if (this -> _denominator == rhs._denominator)
+        if (this->_denominator == rhs._denominator)
         {
             return this->_numerator == rhs._numerator;
         }
+
         return (this->_numerator * rhs._denominator) ==
-            (this->_denominator * rhs._numerator);        
+            (this->_denominator * rhs._numerator);
     }
 
     constexpr bool operator<(const Fraction<Z>& rhs) const
     {
-        if (this -> _denominator == rhs._denominator)
+        if (this->_denominator == rhs._denominator)
         {
             return this->_numerator < rhs._numerator;
         }
+
         return (this->_numerator * rhs._denominator) <
             (this->_denominator * rhs._numerator);
     }
@@ -401,15 +411,15 @@ struct Fraction
         return this->_numerator > (this->_denominator * rhs);
     }
 
-    // /*!
-    //  * @brief
-    //  *
-    //  * @return double
-    //  */
-    // constexpr explicit operator double()
-    // {
-    //     return double(_numerator) / _denominator;
-    // }
+    /*!
+     * @brief
+     *
+     * @return double
+     */
+    constexpr explicit operator double()
+    {
+        return double(_numerator) / _denominator;
+    }
 
     // /**
     //  * @brief
@@ -419,7 +429,6 @@ struct Fraction
     // {
     //     return lhs * rhs.denominator() < rhs.numerator();
     // }
-
 };
 
 
@@ -449,18 +458,18 @@ constexpr Fraction<Z> operator-(const Z& c, const Fraction<Z>& frac)
     return c + (-frac);
 }
 
-/*!
- * @brief
- *
- * @param[in] c
- * @param[in] frac
- * @return Fraction<Z>
- */
-template <typename Z>
-constexpr Fraction<Z> operator*(const Z& c, const Fraction<Z>& frac)
-{
-    return frac * c;
-}
+// /*!
+//  * @brief
+//  *
+//  * @param[in] c
+//  * @param[in] frac
+//  * @return Fraction<Z>
+//  */
+// template <typename Z>
+// constexpr Fraction<Z> operator*(const Z& c, const Fraction<Z>& frac)
+// {
+//     return frac * c;
+// }
 
 /*!
  * @brief
