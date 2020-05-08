@@ -1,5 +1,6 @@
-// -*- coding: utf-8 -*-
+// -*- coding: utf-16 -*-
 #pragma once
+#pragma warning (disable:4819)
 
 /*! @file include/fractions.hpp
  *  This is a C++ Library header.
@@ -62,7 +63,7 @@ struct Fraction : boost::totally_ordered<Fraction<Z>,
     {
         auto common = gcd(numerator, denominator);
         if (common == Z(1)) return;
-        if (common == Z(0)) return; // (unlikely) both num and den are zero
+        if (common == Z(0)) [[unlikely]] return; // both num and den are zero
         if (denominator < Z(0)) common = -common;
         this->_numerator /= common;
         this->_denominator /= common;
@@ -310,7 +311,7 @@ struct Fraction : boost::totally_ordered<Fraction<Z>,
         {
             this->_numerator *= i;
         }
-        else if (common == Z(0)) // (unlikely) both i and den are zero
+        else if (common == Z(0)) [[unlikely]] // both i and den are zero
         {
             this->_numerator = Z(0);
         }
@@ -335,7 +336,7 @@ struct Fraction : boost::totally_ordered<Fraction<Z>,
         {
             this->_denominator *= i;
         }
-        else if (common == Z(0)) // (unlikely) both i and num are zero
+        else if (common == Z(0)) [[unlikely]] // both i and num are zero
         {
             this->_denominator = Z(0);
         }
