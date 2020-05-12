@@ -54,9 +54,9 @@ TEST_CASE("Rectangle test")
     auto xrng1 = interval {4, 8};
     auto yrng1 = interval {5, 7};
     auto r1 = rectangle {xrng1, yrng1};
-    auto xrng2 = interval {5, 7};
-    auto yrng2 = interval {6, 6};
-    auto r2 = rectangle {xrng2, yrng2};
+    // auto xrng2 = interval {5, 7};
+    // auto yrng2 = interval {6, 6};
+    // auto r2 = rectangle {xrng2, yrng2};
     auto p = point {7, 6};
 
     CHECK(r1.contains(p));

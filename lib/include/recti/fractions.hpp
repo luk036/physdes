@@ -1,6 +1,5 @@
 // -*- coding: utf-16 -*-
 #pragma once
-#pragma warning (disable:4819)
 
 /*! @file include/fractions.hpp
  *  This is a C++ Library header.
