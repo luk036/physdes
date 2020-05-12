@@ -62,7 +62,7 @@ struct Fraction : boost::totally_ordered<Fraction<Z>,
     {
         auto common = gcd(numerator, denominator);
         if (common == Z(1)) return;
-        if (common == Z(0)) [[unlikely]] return; // both num and den are zero
+        // if (common == Z(0)) [[unlikely]] return; // both num and den are zero
         if (denominator < Z(0)) common = -common;
         this->_numerator /= common;
         this->_denominator /= common;
@@ -310,10 +310,10 @@ struct Fraction : boost::totally_ordered<Fraction<Z>,
         {
             this->_numerator *= i;
         }
-        else if (common == Z(0)) [[unlikely]] // both i and den are zero
-        {
-            this->_numerator = Z(0);
-        }
+        // else if (common == Z(0)) [[unlikely]] // both i and den are zero
+        // {
+        //     this->_numerator = Z(0);
+        // }
         else
         {
             this->_numerator *= (i / common);
@@ -335,10 +335,10 @@ struct Fraction : boost::totally_ordered<Fraction<Z>,
         {
             this->_denominator *= i;
         }
-        else if (common == Z(0)) [[unlikely]] // both i and num are zero
-        {
-            this->_denominator = Z(0);
-        }
+        // else if (common == Z(0)) [[unlikely]] // both i and num are zero
+        // {
+        //     this->_denominator = Z(0);
+        // }
         else
         {
             this->_denominator *= (i / common);

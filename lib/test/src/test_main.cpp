@@ -1,9 +1,6 @@
 // -*- coding: utf-8 -*-
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <doctest.h>
-#include <span>
-#include <coroutine>
-#include <concepts>
 
 TEST_CASE("undefined behavior")
 {

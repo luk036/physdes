@@ -52,29 +52,9 @@ class point
     /**
      * @brief
      *
-     * @return T1&
-     */
-    constexpr auto x() -> T1&
-    {
-        return this->_x;
-    }
-
-    /**
-     * @brief
-     *
      * @return const T2&
      */
     constexpr auto y() const -> const T2&
-    {
-        return this->_y;
-    }
-
-    /**
-     * @brief
-     *
-     * @return T2&
-     */
-    constexpr auto y() -> T2&
     {
         return this->_y;
     }
