@@ -19,8 +19,7 @@ template <typename T1, typename T2 = T1>
 class point
     : boost::addable2<point<T1,T1>, vector2<T1>          // point + vector2
     , boost::subtractable2<point<T1,T1>, vector2<T1>     // point - vector2
-    , boost::totally_ordered< point<T1, T2>
-      > > >
+      > >
 {
   protected:
     T1 _x; //!< x coordinate
@@ -59,6 +58,20 @@ class point
         return this->_y;
     }
 
+    constexpr point& operator+=(const vector2<T1>& rhs)
+    {
+        this->_x += rhs.x();
+        this->_y += rhs.y();
+        return *this;
+    }
+
+    constexpr point& operator-=(const vector2<T1>& rhs)
+    {
+        this->_x -= rhs.x();
+        this->_y -= rhs.y();
+        return *this;
+    }
+
     /**
      * @brief
      *
@@ -84,9 +97,69 @@ class point
      * @return false
      */
     template <typename U1, typename U2>
+    constexpr bool operator>(const point<U1, U2>& rhs) const
+    {
+        return std::tie(this->x(), this->y()) > std::tie(rhs.x(), rhs.y());
+    }
+
+    /**
+     * @brief
+     *
+     * @tparam U1
+     * @tparam U2
+     * @param rhs
+     * @return true
+     * @return false
+     */
+    template <typename U1, typename U2>
+    constexpr bool operator<=(const point<U1, U2>& rhs) const
+    {
+        return std::tie(this->x(), this->y()) <= std::tie(rhs.x(), rhs.y());
+    }
+
+    /**
+     * @brief
+     *
+     * @tparam U1
+     * @tparam U2
+     * @param rhs
+     * @return true
+     * @return false
+     */
+    template <typename U1, typename U2>
+    constexpr bool operator>=(const point<U1, U2>& rhs) const
+    {
+        return std::tie(this->x(), this->y()) >= std::tie(rhs.x(), rhs.y());
+    }
+
+    /**
+     * @brief
+     *
+     * @tparam U1
+     * @tparam U2
+     * @param rhs
+     * @return true
+     * @return false
+     */
+    template <typename U1, typename U2>
     constexpr bool operator==(const point<U1, U2>& rhs) const
     {
-        return this->x() == rhs.x() && this->y() == rhs.y();
+        return std::tie(this->x(), this->y()) == std::tie(rhs.x(), rhs.y());
+    }
+
+    /**
+     * @brief
+     *
+     * @tparam U1
+     * @tparam U2
+     * @param rhs
+     * @return true
+     * @return false
+     */
+    template <typename U1, typename U2>
+    constexpr bool operator!=(const point<U1, U2>& rhs) const
+    {
+        return std::tie(this->x(), this->y()) != std::tie(rhs.x(), rhs.y());
     }
 
     /**
@@ -123,29 +196,9 @@ class dualpoint : public point<T1, T2>
     /**
      * @brief
      *
-     * @return T1&
-     */
-    constexpr T1& y() // override intentionally
-    {
-        return this->_x;
-    }
-
-    /**
-     * @brief
-     *
      * @return const T2&
      */
     constexpr const T2& x() const // override intentionally
-    {
-        return this->_y;
-    }
-
-    /**
-     * @brief
-     *
-     * @return T2&
-     */
-    constexpr T2& x() // override intentionally
     {
         return this->_y;
     }
@@ -210,29 +263,9 @@ class interval
     /**
      * @brief
      *
-     * @return T&
-     */
-    constexpr T& lower()
-    {
-        return this->_lower;
-    }
-
-    /**
-     * @brief
-     *
      * @return const T&
      */
     constexpr const T& upper() const
-    {
-        return this->_upper;
-    }
-
-    /**
-     * @brief
-     *
-     * @return T&
-     */
-    constexpr T& upper()
     {
         return this->_upper;
     }
@@ -263,7 +296,6 @@ class interval
     {
         return this->upper() < rhs.lower();
     }
-
 
     template <typename U>
     constexpr bool contains(const interval<U>& a) const
