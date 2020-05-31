@@ -1,10 +1,10 @@
 #pragma once
 
 // #include <boost/operators.hpp>
+#include "vector2.hpp"
+#include <boost/operators.hpp>
 #include <cassert>
 #include <tuple> // import std::tie()
-#include <boost/operators.hpp>
-#include "vector2.hpp"
 
 namespace recti
 {
@@ -17,9 +17,6 @@ namespace recti
  */
 template <typename T1, typename T2 = T1>
 class point
-    : boost::addable2<point<T1,T1>, vector2<T1>          // point + vector2
-    , boost::subtractable2<point<T1,T1>, vector2<T1>     // point - vector2
-      > >
 {
   protected:
     T1 _x; //!< x coordinate
@@ -58,6 +55,12 @@ class point
         return this->_y;
     }
 
+    /**
+     * @brief 
+     * 
+     * @param rhs 
+     * @return constexpr point& 
+     */
     constexpr point& operator+=(const vector2<T1>& rhs)
     {
         this->_x += rhs.x();
@@ -65,6 +68,12 @@ class point
         return *this;
     }
 
+    /**
+     * @brief 
+     * 
+     * @param rhs 
+     * @return constexpr point& 
+     */
     constexpr point& operator-=(const vector2<T1>& rhs)
     {
         this->_x -= rhs.x();
@@ -159,7 +168,7 @@ class point
     template <typename U1, typename U2>
     constexpr bool operator!=(const point<U1, U2>& rhs) const
     {
-        return std::tie(this->x(), this->y()) != std::tie(rhs.x(), rhs.y());
+        return !(*this == rhs);
     }
 
     /**
@@ -229,8 +238,7 @@ Stream& operator<<(Stream& out, const point<T1, T2>& p)
  * @tparam T
  */
 template <typename T>
-class interval
-    : boost::totally_ordered< interval<T> >
+class interval : boost::totally_ordered<interval<T>>
 {
   private:
     T _lower; //> lower bound
@@ -271,9 +279,9 @@ class interval
     }
 
     /**
-     * @brief
-     *
-     * @return auto
+     * @brief 
+     * 
+     * @return constexpr T 
      */
     constexpr T len() const
     {
@@ -292,11 +300,26 @@ class interval
         return this->lower() == rhs.lower() && this->upper() == rhs.upper();
     }
 
+    /**
+     * @brief 
+     * 
+     * @param rhs 
+     * @return true 
+     * @return false 
+     */
     constexpr bool operator<(const interval& rhs) const
     {
         return this->upper() < rhs.lower();
     }
 
+    /**
+     * @brief 
+     * 
+     * @tparam U 
+     * @param a 
+     * @return true 
+     * @return false 
+     */
     template <typename U>
     constexpr bool contains(const interval<U>& a) const
     {
@@ -339,7 +362,6 @@ struct rectangle : point<interval<T>>
     /**
      * @brief
      *
-     * @tparam U
      * @param rhs
      * @return true
      * @return false
@@ -369,6 +391,11 @@ struct rectangle : point<interval<T>>
         return {this->x().upper(), this->y().upper()};
     }
 
+    /**
+     * @brief 
+     * 
+     * @return constexpr T 
+     */
     constexpr T area() const
     {
         return this->x().len() * this->y().len();
@@ -426,6 +453,12 @@ struct hsegment : point<interval<T>, T>
     }
 };
 
+
+/**
+ * @brief vsegment Line Segment
+ *
+ * @tparam T
+ */
 template <typename T>
 struct vsegment : point<T, interval<T>>
 {

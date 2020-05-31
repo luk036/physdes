@@ -127,11 +127,22 @@ static void create_xmonotone_i(FwIter&& first, FwIter&& last)
     auto [min, max] = std::minmax_element(first, last, l2r);
     auto pivot = max->y();
 
-    using Fn = std::function<bool(const point<int>&)>;
-    Fn downup = [&pivot](const auto& a) { return a.y() < pivot; };
-    Fn updown = [&pivot](const auto& a) { return pivot < a.y(); };
-    auto middle =
-        std::partition(first, last, (min->y() < pivot) ? downup : updown);
+    // using Fn = std::function<bool(const point<int>&)>;
+    // Fn downup = [&pivot](const auto& a) { return a.y() < pivot; };
+    // Fn updown = [&pivot](const auto& a) { return pivot < a.y(); };
+    // auto middle =
+    //     std::partition(first, last, (min->y() < pivot) ? downup : updown);
+    FwIter middle;
+    if (min->y() < pivot)
+    {
+        middle = std::partition(
+            first, last, [&pivot](const auto& a) { return a.y() < pivot; });
+    }
+    else
+    {
+        middle = std::partition(
+            first, last, [&pivot](const auto& a) { return pivot < a.y(); });
+    }
     std::sort(first, middle, std::move(l2r));
     std::sort(middle, last, std::move(r2l));
 }
