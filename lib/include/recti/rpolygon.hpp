@@ -256,13 +256,16 @@ template <typename T>
 T rpolygon<T>::area() const
 {
     auto it = this->begin();
-    const auto x0 = it->x();
+    assert(it != this->end());
+    
+    auto x0 = it->x();
     auto yi = it->y();
+    ++it;
+
     auto sum = T {};
-    while (++it != this->end())
+    for (; it != this->end(); ++it)
     {
-        sum += (it->y() - yi) * (it->x() - x0);
-        yi = it->y();
+        sum += (it->y() - yi) * (it->x() - x0), yi = it->y();
     }
     return sum;
 }

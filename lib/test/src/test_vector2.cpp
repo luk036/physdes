@@ -22,10 +22,10 @@ TEST_CASE("vector2")
     const auto p = vector2 {a, b};
     const auto q = vector2 {c, d};
 
-    CHECK(vector2(8, 10) == (p + q));
-    CHECK(vector2(-2, -2) == (p - q));
-    CHECK(vector2(6, 8) == (p * 2));
-    CHECK(vector2(4, 5) == (p + q) / 2);
+    CHECK(vector2 {8, 10} == (p + q));
+    CHECK(vector2 {-2, -2} == (p - q));
+    CHECK(vector2 {6, 8} == (p * 2));
+    CHECK(vector2 {4, 5} == (p + q) / 2);
     CHECK(p != q);
 
 }

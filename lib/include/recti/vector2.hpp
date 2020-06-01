@@ -6,7 +6,7 @@
  * @brief vector2
  *
  */
-template <class T>
+template <typename T=int>
 class vector2 // note: private inheritance is OK here!
 {
   private:
