@@ -6,11 +6,12 @@ RUN apt-get update \
  && apt-get install -y \
   apt-utils \
   sudo \
-  aria2 \
   git \
-  less \
   lcov \
+  less \
   neofetch \
+  asciinema \
+  tmux \
   vifm \
   w3m \
   wget
@@ -32,8 +33,19 @@ RUN chown -R gitpod:gitpod /opt/conda \
     && chown -R gitpod:gitpod /home/gitpod/.conda \
     && chmod -R 777 /home/gitpod/.conda
 
-RUN conda install ninja
+RUN /opt/conda/bin/conda config --set always_yes yes --set changeps1 no \
+    && /opt/conda/bin/conda update -q conda \
+    && /opt/conda/bin/conda info -a
 
-RUN conda install -c conda-forge libboost fmt spdlog
+RUN /opt/conda/bin/conda install -y \
+    ninja
+
+RUN /opt/conda/bin/conda install -y -c conda-forge \
+    benchmark \
+    fmt \
+    lapack \
+    libboost \
+    spdlog \
+    cppcheck
 
 RUN apt-get clean && rm -rf /var/cache/apt/* && rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
