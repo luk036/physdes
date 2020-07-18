@@ -227,7 +227,7 @@ class dualpoint : public point<T1, T2>
 template <class Stream, typename T1, typename T2>
 Stream& operator<<(Stream& out, const point<T1, T2>& p)
 {
-    out << '(' << p.x() / 100.0 << ", " << p.y() / 100.0 << ')';
+    out << '(' << p.x() << ", " << p.y() << ')';
     return out;
 }
 

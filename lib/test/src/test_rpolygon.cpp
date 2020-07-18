@@ -21,16 +21,16 @@ TEST_CASE("Rectilinear Polygon test")
         S.emplace_back(point<int> {std::rand() % 100, std::rand() % 100});
     }
 
-    for (auto&& r : S)
-    {
-        cout << "  \\draw " << r << ";\n";
-    }
+    // for (auto&& r : S)
+    // {
+    //     cout << "  \\draw " << r << ";\n";
+    // }
 
-    cout << "-------------------------------\n";
-    auto R1 = rpolygon<int>::create_xmonotone(S);
-    cout << R1.area() << "\n";
+    // cout << "-------------------------------\n";
+    // auto R1 = rpolygon<int>::create_xmonotone(S);
+    // cout << R1.area() << "\n";
 
-    cout << "-------------------------------\n";
-    auto R2 = rpolygon<int>::create_ymonotone(S);
-    cout << R2.area() << "\n";
+    // cout << "-------------------------------\n";
+    // auto R2 = rpolygon<int>::create_ymonotone(S);
+    // cout << R2.area() << "\n";
 }
