@@ -11,26 +11,14 @@ using std::cout;
 
 TEST_CASE("Rectilinear Polygon test")
 {
-    constexpr auto N = 100;
-    auto S = std::vector<point<int>> {};
-    S.reserve(N);
+    auto S = std::vector<point<int>> {{-2, 2}, {0, -1}, {-5, 1}, {-2, 4},
+        {0, -4}, {-4, 3}, {-6, -2}, {5, 1}, {2, 2}, {3, -3}, {-3, -4}, {1, 4}};
 
-    for (auto i = 0U; i != N; ++i)
-    {
-        // S.emplace_back(point<int>{randint(-100, 100), randint(-100, 100)});
-        S.emplace_back(point<int> {std::rand() % 100, std::rand() % 100});
-    }
+    cout << "-------------------------------\n";
+    rpolygon<int>::create_ymono_rpolygon(S.begin(), S.end());
 
-    // for (auto&& r : S)
+    // for (auto&& p : S)
     // {
-    //     cout << "  \\draw " << r << ";\n";
+    //     std::cout << "  \\draw " << p << ";\n";
     // }
-
-    // cout << "-------------------------------\n";
-    // auto R1 = rpolygon<int>::create_xmonotone(S);
-    // cout << R1.area() << "\n";
-
-    // cout << "-------------------------------\n";
-    // auto R2 = rpolygon<int>::create_ymonotone(S);
-    // cout << R2.area() << "\n";
 }

@@ -1,5 +1,4 @@
 #include <doctest.h>
-// #include <random>
 #include <iostream>
 #include <recti/polygon.hpp>
 #include <recti/recti.hpp>
@@ -15,7 +14,7 @@ TEST_CASE("Polygon test")
         {0, -4}, {-4, 3}, {-6, -2}, {5, 1}, {2, 2}, {3, -3}, {-3, -4}, {1, 4}};
 
     cout << "-------------------------------\n";
-    polygon<int>::create_ymono_polygon(S.begin(), S.end());
+    polygon<int>::create_test_polygon(S.begin(), S.end());
 
     for (auto&& p : S)
     {
