@@ -45,13 +45,13 @@ matrix:
       addons: *clang9
       env: COMPILER=clang CLANG=9 BUILD_TYPE='Release'
     - os: osx
-      osx_image: xcode11
+      osx_image: xcode11.5
       addons:
         homebrew:
           packages:
           - lcov
           update: true
-      env: COMPILER=clang CLANG=8 BUILD_TYPE='Release'
+      env: COMPILER=clang CLANG=10 BUILD_TYPE='Release'
 
 
 env:
