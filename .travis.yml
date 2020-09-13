@@ -45,7 +45,7 @@ matrix:
       addons: *clang9
       env: COMPILER=clang CLANG=9 BUILD_TYPE='Release'
     - os: osx
-      osx_image: xcode11.5
+      osx_image: xcode12
       addons:
         homebrew:
           packages:
