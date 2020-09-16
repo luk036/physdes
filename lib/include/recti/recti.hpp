@@ -56,10 +56,10 @@ class point
     }
 
     /**
-     * @brief 
-     * 
-     * @param rhs 
-     * @return constexpr point& 
+     * @brief
+     *
+     * @param rhs
+     * @return constexpr point&
      */
     constexpr point& operator+=(const vector2<T1>& rhs)
     {
@@ -69,10 +69,10 @@ class point
     }
 
     /**
-     * @brief 
-     * 
-     * @param rhs 
-     * @return constexpr point& 
+     * @brief
+     *
+     * @param rhs
+     * @return constexpr point&
      */
     constexpr point& operator-=(const vector2<T1>& rhs)
     {
@@ -279,9 +279,9 @@ class interval : boost::totally_ordered<interval<T>>
     }
 
     /**
-     * @brief 
-     * 
-     * @return constexpr T 
+     * @brief
+     *
+     * @return constexpr T
      */
     constexpr T len() const
     {
@@ -301,11 +301,11 @@ class interval : boost::totally_ordered<interval<T>>
     }
 
     /**
-     * @brief 
-     * 
-     * @param rhs 
-     * @return true 
-     * @return false 
+     * @brief
+     *
+     * @param rhs
+     * @return true
+     * @return false
      */
     constexpr bool operator<(const interval& rhs) const
     {
@@ -313,12 +313,12 @@ class interval : boost::totally_ordered<interval<T>>
     }
 
     /**
-     * @brief 
-     * 
-     * @tparam U 
-     * @param a 
-     * @return true 
-     * @return false 
+     * @brief
+     *
+     * @tparam U
+     * @param a
+     * @return true
+     * @return false
      */
     template <typename U>
     constexpr bool contains(const interval<U>& a) const
@@ -392,9 +392,9 @@ struct rectangle : point<interval<T>>
     }
 
     /**
-     * @brief 
-     * 
-     * @return constexpr T 
+     * @brief
+     *
+     * @return constexpr T
      */
     constexpr T area() const
     {

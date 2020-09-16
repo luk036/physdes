@@ -6,7 +6,7 @@
  * @brief vector2
  *
  */
-template <typename T=int>
+template <typename T = int>
 class vector2 // note: private inheritance is OK here!
 {
   private:
@@ -15,8 +15,8 @@ class vector2 // note: private inheritance is OK here!
 
   public:
     /**
-     * @brief 
-     * 
+     * @brief
+     *
      */
     constexpr vector2(T x, T y)
         : _x {std::move(x)}
@@ -25,9 +25,9 @@ class vector2 // note: private inheritance is OK here!
     }
 
     /**
-     * @brief 
-     * 
-     * @return constexpr const T& 
+     * @brief
+     *
+     * @return constexpr const T&
      */
     constexpr const T& x() const
     {
@@ -35,9 +35,9 @@ class vector2 // note: private inheritance is OK here!
     }
 
     /**
-     * @brief 
-     * 
-     * @return constexpr const T& 
+     * @brief
+     *
+     * @return constexpr const T&
      */
     constexpr const T& y() const
     {
@@ -45,10 +45,10 @@ class vector2 // note: private inheritance is OK here!
     }
 
     /**
-     * @brief 
-     * 
-     * @param rhs 
-     * @return constexpr vector2& 
+     * @brief
+     *
+     * @param rhs
+     * @return constexpr vector2&
      */
     constexpr vector2& operator+=(const vector2& rhs)
     {
@@ -58,10 +58,10 @@ class vector2 // note: private inheritance is OK here!
     }
 
     /**
-     * @brief 
-     * 
-     * @param rhs 
-     * @return constexpr vector2& 
+     * @brief
+     *
+     * @param rhs
+     * @return constexpr vector2&
      */
     constexpr vector2& operator-=(const vector2& rhs)
     {
@@ -71,10 +71,10 @@ class vector2 // note: private inheritance is OK here!
     }
 
     /**
-     * @brief 
-     * 
-     * @param alpha 
-     * @return constexpr vector2& 
+     * @brief
+     *
+     * @param alpha
+     * @return constexpr vector2&
      */
     constexpr vector2& operator*=(const T& alpha)
     {
@@ -84,10 +84,10 @@ class vector2 // note: private inheritance is OK here!
     }
 
     /**
-     * @brief 
-     * 
-     * @param alpha 
-     * @return constexpr vector2& 
+     * @brief
+     *
+     * @param alpha
+     * @return constexpr vector2&
      */
     constexpr vector2& operator/=(const T& alpha)
     {
@@ -97,11 +97,11 @@ class vector2 // note: private inheritance is OK here!
     }
 
     /**
-     * @brief 
-     * 
-     * @param rhs 
-     * @return true 
-     * @return false 
+     * @brief
+     *
+     * @param rhs
+     * @return true
+     * @return false
      */
     constexpr bool operator==(const vector2<T>& rhs) const
     {
@@ -109,11 +109,11 @@ class vector2 // note: private inheritance is OK here!
     }
 
     /**
-     * @brief 
-     * 
-     * @param rhs 
-     * @return true 
-     * @return false 
+     * @brief
+     *
+     * @param rhs
+     * @return true
+     * @return false
      */
     constexpr bool operator!=(const vector2<T>& rhs) const
     {
@@ -123,12 +123,12 @@ class vector2 // note: private inheritance is OK here!
 
 
 /**
- * @brief 
- * 
- * @tparam T 
- * @param lhs 
- * @param rhs 
- * @return constexpr vector2<T> 
+ * @brief
+ *
+ * @tparam T
+ * @param lhs
+ * @param rhs
+ * @return constexpr vector2<T>
  */
 template <class T>
 constexpr vector2<T> operator+(vector2<T> lhs, const vector2<T>& rhs)
@@ -137,12 +137,12 @@ constexpr vector2<T> operator+(vector2<T> lhs, const vector2<T>& rhs)
 }
 
 /**
- * @brief 
- * 
- * @tparam T 
- * @param lhs 
- * @param rhs 
- * @return constexpr vector2<T> 
+ * @brief
+ *
+ * @tparam T
+ * @param lhs
+ * @param rhs
+ * @return constexpr vector2<T>
  */
 template <class T>
 constexpr vector2<T> operator-(vector2<T> lhs, const vector2<T>& rhs)
@@ -151,12 +151,12 @@ constexpr vector2<T> operator-(vector2<T> lhs, const vector2<T>& rhs)
 }
 
 /**
- * @brief 
- * 
- * @tparam T 
- * @param lhs 
- * @param rhs 
- * @return constexpr vector2<T> 
+ * @brief
+ *
+ * @tparam T
+ * @param lhs
+ * @param rhs
+ * @return constexpr vector2<T>
  */
 template <class T>
 constexpr vector2<T> operator*(vector2<T> lhs, const T& rhs)
@@ -165,12 +165,12 @@ constexpr vector2<T> operator*(vector2<T> lhs, const T& rhs)
 }
 
 /**
- * @brief 
- * 
- * @tparam T 
- * @param lhs 
- * @param rhs 
- * @return constexpr vector2<T> 
+ * @brief
+ *
+ * @tparam T
+ * @param lhs
+ * @param rhs
+ * @return constexpr vector2<T>
  */
 template <class T>
 constexpr vector2<T> operator*(const T& lhs, vector2<T> rhs)
@@ -179,12 +179,12 @@ constexpr vector2<T> operator*(const T& lhs, vector2<T> rhs)
 }
 
 /**
- * @brief 
- * 
- * @tparam T 
- * @param lhs 
- * @param rhs 
- * @return constexpr vector2<T> 
+ * @brief
+ *
+ * @tparam T
+ * @param lhs
+ * @param rhs
+ * @return constexpr vector2<T>
  */
 template <class T>
 constexpr vector2<T> operator/(vector2<T> lhs, const T& rhs)

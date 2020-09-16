@@ -61,9 +61,11 @@ struct Fraction : boost::totally_ordered<Fraction<Z>,
         , _denominator {std::move(denominator)}
     {
         auto common = gcd(numerator, denominator);
-        if (common == Z(1)) return;
+        if (common == Z(1))
+            return;
         // if (common == Z(0)) [[unlikely]] return; // both num and den are zero
-        if (denominator < Z(0)) common = -common;
+        if (denominator < Z(0))
+            common = -common;
         this->_numerator /= common;
         this->_denominator /= common;
     }

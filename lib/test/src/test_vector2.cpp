@@ -27,5 +27,4 @@ TEST_CASE("vector2")
     CHECK(vector2 {6, 8} == (p * 2));
     CHECK(vector2 {4, 5} == (p + q) / 2);
     CHECK(p != q);
-
 }
