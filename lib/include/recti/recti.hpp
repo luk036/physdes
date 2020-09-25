@@ -17,6 +17,10 @@ namespace recti
  */
 template <typename T1, typename T2 = T1>
 class point
+    : boost::totally_ordered<point<T1, T2>,
+        boost::subtractable<point<T1, T2>,           // point - point
+           boost::additive2<point<T1, T2>, vector2<T1>
+                  > > >
 {
   protected:
     T1 _x; //!< x coordinate
@@ -29,11 +33,24 @@ class point
      * @param x
      * @param y
      */
-    constexpr point(T1 x, T2 y)
+    constexpr point(T1&& x, T2&& y) noexcept
         : _x {std::move(x)}
         , _y {std::move(y)}
     {
     }
+
+    /**
+     * @brief Construct a new point object
+     *
+     * @param x
+     * @param y
+     */
+    constexpr point(const T1& x, const T2& y)
+        : _x {x}
+        , _y {y}
+    {
+    }
+
 
     /**
      * @brief
@@ -96,50 +113,50 @@ class point
         return std::tie(this->x(), this->y()) < std::tie(rhs.x(), rhs.y());
     }
 
-    /**
-     * @brief
-     *
-     * @tparam U1
-     * @tparam U2
-     * @param rhs
-     * @return true
-     * @return false
-     */
-    template <typename U1, typename U2>
-    constexpr bool operator>(const point<U1, U2>& rhs) const
-    {
-        return std::tie(this->x(), this->y()) > std::tie(rhs.x(), rhs.y());
-    }
+    // /**
+    //  * @brief
+    //  *
+    //  * @tparam U1
+    //  * @tparam U2
+    //  * @param rhs
+    //  * @return true
+    //  * @return false
+    //  */
+    // template <typename U1, typename U2>
+    // constexpr bool operator>(const point<U1, U2>& rhs) const
+    // {
+    //     return std::tie(this->x(), this->y()) > std::tie(rhs.x(), rhs.y());
+    // }
 
-    /**
-     * @brief
-     *
-     * @tparam U1
-     * @tparam U2
-     * @param rhs
-     * @return true
-     * @return false
-     */
-    template <typename U1, typename U2>
-    constexpr bool operator<=(const point<U1, U2>& rhs) const
-    {
-        return std::tie(this->x(), this->y()) <= std::tie(rhs.x(), rhs.y());
-    }
+    // /**
+    //  * @brief
+    //  *
+    //  * @tparam U1
+    //  * @tparam U2
+    //  * @param rhs
+    //  * @return true
+    //  * @return false
+    //  */
+    // template <typename U1, typename U2>
+    // constexpr bool operator<=(const point<U1, U2>& rhs) const
+    // {
+    //     return std::tie(this->x(), this->y()) <= std::tie(rhs.x(), rhs.y());
+    // }
 
-    /**
-     * @brief
-     *
-     * @tparam U1
-     * @tparam U2
-     * @param rhs
-     * @return true
-     * @return false
-     */
-    template <typename U1, typename U2>
-    constexpr bool operator>=(const point<U1, U2>& rhs) const
-    {
-        return std::tie(this->x(), this->y()) >= std::tie(rhs.x(), rhs.y());
-    }
+    // /**
+    //  * @brief
+    //  *
+    //  * @tparam U1
+    //  * @tparam U2
+    //  * @param rhs
+    //  * @return true
+    //  * @return false
+    //  */
+    // template <typename U1, typename U2>
+    // constexpr bool operator>=(const point<U1, U2>& rhs) const
+    // {
+    //     return std::tie(this->x(), this->y()) >= std::tie(rhs.x(), rhs.y());
+    // }
 
     /**
      * @brief
@@ -156,20 +173,20 @@ class point
         return std::tie(this->x(), this->y()) == std::tie(rhs.x(), rhs.y());
     }
 
-    /**
-     * @brief
-     *
-     * @tparam U1
-     * @tparam U2
-     * @param rhs
-     * @return true
-     * @return false
-     */
-    template <typename U1, typename U2>
-    constexpr bool operator!=(const point<U1, U2>& rhs) const
-    {
-        return !(*this == rhs);
-    }
+    // /**
+    //  * @brief
+    //  *
+    //  * @tparam U1
+    //  * @tparam U2
+    //  * @param rhs
+    //  * @return true
+    //  * @return false
+    //  */
+    // template <typename U1, typename U2>
+    // constexpr bool operator!=(const point<U1, U2>& rhs) const
+    // {
+    //     return !(*this == rhs);
+    // }
 
     /**
      * @brief
@@ -179,6 +196,23 @@ class point
     constexpr auto flip() const -> point<T2, T1>
     {
         return {this->y(), this->x()};
+    }
+
+    /**
+     * @brief
+     *
+     * @tparam Stream
+     * @tparam T1
+     * @tparam T2
+     * @param out
+     * @param p
+     * @return Stream&
+     */
+    template <class Stream>
+    friend Stream& operator<<(Stream& out, const point& p)
+    {
+        out << '(' << p.x() << ", " << p.y() << ')';
+        return out;
     }
 };
 
@@ -215,24 +249,6 @@ class dualpoint : public point<T1, T2>
 
 
 /**
- * @brief
- *
- * @tparam Stream
- * @tparam T1
- * @tparam T2
- * @param out
- * @param p
- * @return Stream&
- */
-template <class Stream, typename T1, typename T2>
-Stream& operator<<(Stream& out, const point<T1, T2>& p)
-{
-    out << '(' << p.x() << ", " << p.y() << ')';
-    return out;
-}
-
-
-/**
  * @brief Interval
  *
  * @tparam T
@@ -251,9 +267,22 @@ class interval : boost::totally_ordered<interval<T>>
      * @param lower
      * @param upper
      */
-    constexpr interval(T lower, T upper)
+    constexpr interval(T&& lower, T&& upper) noexcept
         : _lower {std::move(lower)}
         , _upper {std::move(upper)}
+    {
+        assert(!(_upper < _lower));
+    }
+
+    /**
+     * @brief Construct a new interval object
+     *
+     * @param lower
+     * @param upper
+     */
+    constexpr interval(const T& lower, const T& upper)
+        : _lower {lower}
+        , _upper {upper}
     {
         assert(!(_upper < _lower));
     }
@@ -354,8 +383,19 @@ struct rectangle : point<interval<T>>
      * @param x
      * @param y
      */
-    constexpr rectangle(interval<T> x, interval<T> y)
+    constexpr rectangle(interval<T>&& x, interval<T>&& y) noexcept
         : point<interval<T>> {std::move(x), std::move(y)}
+    {
+    }
+
+    /**
+     * @brief Construct a new rectangle object
+     *
+     * @param x
+     * @param y
+     */
+    constexpr rectangle(const interval<T>& x, const interval<T>& y)
+        : point<interval<T>> {x, y}
     {
     }
 
@@ -400,23 +440,23 @@ struct rectangle : point<interval<T>>
     {
         return this->x().len() * this->y().len();
     }
-};
 
-/**
- * @brief
- *
- * @tparam Stream
- * @tparam T
- * @param out
- * @param r
- * @return Stream&
- */
-template <class Stream, typename T>
-Stream& operator<<(Stream& out, const rectangle<T>& r)
-{
-    out << r.lower() << " rectangle " << r.upper();
-    return out;
-}
+    /**
+     * @brief
+     *
+     * @tparam Stream
+     * @tparam T
+     * @param out
+     * @param r
+     * @return Stream&
+     */
+    template <class Stream>
+    friend Stream& operator<<(Stream& out, const rectangle& r)
+    {
+        out << r.lower() << " rectangle " << r.upper();
+        return out;
+    }
+};
 
 
 /**
@@ -433,8 +473,19 @@ struct hsegment : point<interval<T>, T>
      * @param x
      * @param y
      */
-    constexpr hsegment(interval<T> x, T y)
+    constexpr hsegment(interval<T>&& x, T&& y) noexcept
         : point<interval<T>, T> {std::move(x), std::move(y)}
+    {
+    }
+
+    /**
+     * @brief Construct a new hsegment object
+     *
+     * @param x
+     * @param y
+     */
+    constexpr hsegment(const interval<T>& x, const T& y)
+        : point<interval<T>, T> {x, y}
     {
     }
 
@@ -468,8 +519,19 @@ struct vsegment : point<T, interval<T>>
      * @param x
      * @param y
      */
-    constexpr vsegment(T x, interval<T> y)
+    constexpr vsegment(T&& x, interval<T>&& y) noexcept
         : point<T, interval<T>> {std::move(x), std::move(y)}
+    {
+    }
+
+    /**
+     * @brief Construct a new vsegment object
+     *
+     * @param x
+     * @param y
+     */
+    constexpr vsegment(const T& x, const interval<T>& y)
+        : point<T, interval<T>> {x, y}
     {
     }
 

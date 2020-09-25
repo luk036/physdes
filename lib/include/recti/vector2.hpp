@@ -1,5 +1,7 @@
 #pragma once
 
+#include <boost/operators.hpp>
+#include <tuple>
 #include <utility> // import std::move
 
 /**
@@ -7,7 +9,10 @@
  *
  */
 template <typename T = int>
-class vector2 // note: private inheritance is OK here!
+class vector2
+    : boost::totally_ordered<vector2<T>,
+          boost::additive<vector2<T>, boost::multiplicative<vector2<T>, T>>>
+// note: private inheritance is OK here!
 {
   private:
     T _x;
@@ -18,9 +23,19 @@ class vector2 // note: private inheritance is OK here!
      * @brief
      *
      */
-    constexpr vector2(T x, T y)
+    constexpr vector2(T&& x, T&& y) noexcept
         : _x {std::move(x)}
         , _y {std::move(y)}
+    {
+    }
+
+    /**
+     * @brief
+     *
+     */
+    constexpr vector2(const T& x, const T& y)
+        : _x {x}
+        , _y {y}
     {
     }
 
@@ -105,7 +120,7 @@ class vector2 // note: private inheritance is OK here!
      */
     constexpr bool operator==(const vector2<T>& rhs) const
     {
-        return this->_x == rhs._x && this->_y == rhs._y;
+        return std::tie(this->x(), this->y()) == std::tie(rhs.x(), rhs.y());
     }
 
     /**
@@ -115,79 +130,79 @@ class vector2 // note: private inheritance is OK here!
      * @return true
      * @return false
      */
-    constexpr bool operator!=(const vector2<T>& rhs) const
+    constexpr bool operator<(const vector2<T>& rhs) const
     {
-        return !(*this == rhs);
+        return std::tie(this->x(), this->y()) < std::tie(rhs.x(), rhs.y());
     }
 };
 
 
-/**
- * @brief
- *
- * @tparam T
- * @param lhs
- * @param rhs
- * @return constexpr vector2<T>
- */
-template <class T>
-constexpr vector2<T> operator+(vector2<T> lhs, const vector2<T>& rhs)
-{
-    return lhs += rhs;
-}
+// /**
+//  * @brief
+//  *
+//  * @tparam T
+//  * @param lhs
+//  * @param rhs
+//  * @return constexpr vector2<T>
+//  */
+// template <class T>
+// constexpr vector2<T> operator+(vector2<T> lhs, const vector2<T>& rhs)
+// {
+//     return lhs += rhs;
+// }
 
-/**
- * @brief
- *
- * @tparam T
- * @param lhs
- * @param rhs
- * @return constexpr vector2<T>
- */
-template <class T>
-constexpr vector2<T> operator-(vector2<T> lhs, const vector2<T>& rhs)
-{
-    return lhs -= rhs;
-}
+// /**
+//  * @brief
+//  *
+//  * @tparam T
+//  * @param lhs
+//  * @param rhs
+//  * @return constexpr vector2<T>
+//  */
+// template <class T>
+// constexpr vector2<T> operator-(vector2<T> lhs, const vector2<T>& rhs)
+// {
+//     return lhs -= rhs;
+// }
 
-/**
- * @brief
- *
- * @tparam T
- * @param lhs
- * @param rhs
- * @return constexpr vector2<T>
- */
-template <class T>
-constexpr vector2<T> operator*(vector2<T> lhs, const T& rhs)
-{
-    return lhs *= rhs;
-}
+// /**
+//  * @brief
+//  *
+//  * @tparam T
+//  * @param lhs
+//  * @param rhs
+//  * @return constexpr vector2<T>
+//  */
+// template <class T>
+// constexpr vector2<T> operator*(vector2<T> lhs, const T& rhs)
+// {
+//     return lhs *= rhs;
+// }
 
-/**
- * @brief
- *
- * @tparam T
- * @param lhs
- * @param rhs
- * @return constexpr vector2<T>
- */
-template <class T>
-constexpr vector2<T> operator*(const T& lhs, vector2<T> rhs)
-{
-    return rhs *= lhs;
-}
+// /**
+//  * @brief
+//  *
+//  * @tparam T
+//  * @param lhs
+//  * @param rhs
+//  * @return constexpr vector2<T>
+//  */
+// template <class T>
+// constexpr vector2<T> operator*(const T& lhs, vector2<T> rhs)
+// {
+//     return rhs *= lhs;
+// }
 
-/**
- * @brief
- *
- * @tparam T
- * @param lhs
- * @param rhs
- * @return constexpr vector2<T>
- */
-template <class T>
-constexpr vector2<T> operator/(vector2<T> lhs, const T& rhs)
-{
-    return lhs /= rhs;
-}
+// /**
+//  * @brief
+//  *
+//  * @tparam T
+//  * @param lhs
+//  * @param rhs
+//  * @return constexpr vector2<T>
+//  */
+// template <class T>
+// constexpr vector2<T> operator/(vector2<T> lhs, const T& rhs)
+// {
+//     return lhs /= rhs;
+// }

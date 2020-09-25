@@ -43,9 +43,9 @@ constexpr _Mn lcm(_Mn __m, _Mn __n)
 
 template <typename Z>
 struct Fraction : boost::totally_ordered<Fraction<Z>,
-                      boost::totally_ordered<Fraction<Z>, Z,
-                          boost::multipliable<Fraction<Z>, Z,
-                              boost::dividable<Fraction<Z>, Z>>>>
+                      boost::totally_ordered2<Fraction<Z>, Z,
+                          boost::multipliable2<Fraction<Z>, Z,
+                              boost::dividable2<Fraction<Z>, Z>>>>
 {
     Z _numerator;
     Z _denominator;
@@ -56,15 +56,33 @@ struct Fraction : boost::totally_ordered<Fraction<Z>,
      * @param[in] numerator
      * @param[in] denominator
      */
-    constexpr Fraction(Z numerator, Z denominator)
+    constexpr Fraction(Z&& numerator, Z&& denominator) noexcept
         : _numerator {std::move(numerator)}
         , _denominator {std::move(denominator)}
     {
-        auto common = gcd(numerator, denominator);
+        this->normalize();
+    }
+
+    /*!
+     * @brief Construct a new Fraction object
+     *
+     * @param[in] numerator
+     * @param[in] denominator
+     */
+    constexpr Fraction(const Z& numerator, const Z& denominator)
+        : _numerator {numerator}
+        , _denominator {denominator}
+    {
+        this->normalize();
+    }
+
+    constexpr void normalize()
+    {
+        auto common = gcd(this->_numerator, this->_denominator);
         if (common == Z(1))
             return;
         // if (common == Z(0)) [[unlikely]] return; // both num and den are zero
-        if (denominator < Z(0))
+        if (this->_denominator < Z(0))
             common = -common;
         this->_numerator /= common;
         this->_denominator /= common;
@@ -75,9 +93,20 @@ struct Fraction : boost::totally_ordered<Fraction<Z>,
      *
      * @param[in] numerator
      */
+    constexpr explicit Fraction(Z&& numerator) noexcept
+        : _numerator {std::move(numerator)}
+        , _denominator(Z(1))
+    {
+    }
+
+    /*!
+     * @brief Construct a new Fraction object
+     *
+     * @param[in] numerator
+     */
     constexpr explicit Fraction(const Z& numerator)
         : _numerator {numerator}
-        , _denominator(1)
+        , _denominator(Z(1))
     {
     }
 

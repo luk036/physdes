@@ -21,7 +21,17 @@ class polygon : public std::vector<point<T>>
      *
      * @param pointset
      */
-    polygon(std::vector<point<T>> pointset)
+    explicit polygon(std::vector<point<T>>&& pointset) noexcept
+        : std::vector<point<T>> {std::move(pointset)}
+    {
+    }
+
+    /**
+     * @brief Construct a new polygon object
+     *
+     * @param pointset
+     */
+    explicit polygon(const std::vector<point<T>>& pointset)
         : std::vector<point<T>> {std::move(pointset)}
     {
     }

@@ -21,8 +21,18 @@ class rpolygon : public std::vector<point<T>>
      *
      * @param pointset
      */
-    rpolygon(std::vector<point<T>> pointset)
+    rpolygon(std::vector<point<T>>&& pointset) noexcept
         : std::vector<point<T>> {std::move(pointset)}
+    {
+    }
+
+    /**
+     * @brief Construct a new rpolygon object
+     *
+     * @param pointset
+     */
+    rpolygon(const std::vector<point<T>>& pointset)
+        : std::vector<point<T>> {pointset}
     {
     }
 
@@ -53,7 +63,7 @@ class rpolygon : public std::vector<point<T>>
      * @param pointset
      * @return rpolygon<T>
      */
-    static rpolygon<T> create_xmonotone(std::vector<point<T>> pointset);
+    static rpolygon<T> create_xmonotone(std::vector<point<T>>&& pointset);
 
     /**
      * @brief Create a y-monotone object
@@ -61,7 +71,7 @@ class rpolygon : public std::vector<point<T>>
      * @param pointset
      * @return rpolygon<T>
      */
-    static rpolygon<T> create_ymonotone(std::vector<point<T>> pointset);
+    static rpolygon<T> create_ymonotone(std::vector<point<T>>&& pointset);
 
     /**
      * @brief Create a regular object
@@ -273,10 +283,10 @@ static void create_xmonotone_i(FwIter&& first, FwIter&& last)
  * @return rpolygon<T>
  */
 template <typename T>
-rpolygon<T> rpolygon<T>::create_xmonotone(std::vector<point<T>> pointset)
+rpolygon<T> rpolygon<T>::create_xmonotone(std::vector<point<T>>&& pointset)
 {
     create_xmonotone_i(pointset.begin(), pointset.end());
-    return {std::move(pointset)};
+    return rpolygon<T> {std::forward<std::vector<point<T>>>(pointset)};
 }
 
 /**
@@ -287,13 +297,13 @@ rpolygon<T> rpolygon<T>::create_xmonotone(std::vector<point<T>> pointset)
  * @return rpolygon<T>
  */
 template <typename T>
-rpolygon<T> rpolygon<T>::create_ymonotone(std::vector<point<T>> pointset)
+rpolygon<T> rpolygon<T>::create_ymonotone(std::vector<point<T>>&& pointset)
 {
     using D = std::vector<dualpoint<T>>; // x <-> y
     auto first = reinterpret_cast<D&>(pointset).begin();
     auto last = reinterpret_cast<D&>(pointset).end();
     create_xmonotone_i(std::move(first), std::move(last));
-    return {std::move(pointset)};
+    return rpolygon<T> {std::forward<std::vector<point<T>>>(pointset)};
 }
 
 
