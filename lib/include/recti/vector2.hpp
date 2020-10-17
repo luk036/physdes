@@ -44,7 +44,7 @@ class vector2
      *
      * @return constexpr const T&
      */
-    constexpr const T& x() const
+    constexpr auto x() const -> const T&
     {
         return this->_x;
     }
@@ -54,7 +54,7 @@ class vector2
      *
      * @return constexpr const T&
      */
-    constexpr const T& y() const
+    constexpr auto y() const -> const T&
     {
         return this->_y;
     }
@@ -65,7 +65,7 @@ class vector2
      * @param rhs
      * @return constexpr vector2&
      */
-    constexpr vector2& operator+=(const vector2& rhs)
+    constexpr auto operator+=(const vector2& rhs) -> vector2&
     {
         this->_x += rhs.x();
         this->_y += rhs.y();
@@ -78,7 +78,7 @@ class vector2
      * @param rhs
      * @return constexpr vector2&
      */
-    constexpr vector2& operator-=(const vector2& rhs)
+    constexpr auto operator-=(const vector2& rhs) -> vector2&
     {
         this->_x -= rhs.x();
         this->_y -= rhs.y();
@@ -91,7 +91,7 @@ class vector2
      * @param alpha
      * @return constexpr vector2&
      */
-    constexpr vector2& operator*=(const T& alpha)
+    constexpr auto operator*=(const T& alpha) -> vector2&
     {
         this->_x *= alpha;
         this->_y *= alpha;
@@ -104,7 +104,7 @@ class vector2
      * @param alpha
      * @return constexpr vector2&
      */
-    constexpr vector2& operator/=(const T& alpha)
+    constexpr auto operator/=(const T& alpha) -> vector2&
     {
         this->_x /= alpha;
         this->_y /= alpha;
@@ -118,7 +118,7 @@ class vector2
      * @return true
      * @return false
      */
-    constexpr bool operator==(const vector2<T>& rhs) const
+    constexpr auto operator==(const vector2<T>& rhs) const -> bool
     {
         return std::tie(this->x(), this->y()) == std::tie(rhs.x(), rhs.y());
     }
@@ -130,7 +130,7 @@ class vector2
      * @return true
      * @return false
      */
-    constexpr bool operator<(const vector2<T>& rhs) const
+    constexpr auto operator<(const vector2<T>& rhs) const -> bool
     {
         return std::tie(this->x(), this->y()) < std::tie(rhs.x(), rhs.y());
     }

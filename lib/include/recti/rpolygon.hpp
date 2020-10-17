@@ -21,7 +21,7 @@ class rpolygon : public std::vector<point<T>>
      *
      * @param pointset
      */
-    rpolygon(std::vector<point<T>>&& pointset) noexcept
+    explicit rpolygon(std::vector<point<T>>&& pointset) noexcept
         : std::vector<point<T>> {std::move(pointset)}
     {
     }
@@ -31,7 +31,7 @@ class rpolygon : public std::vector<point<T>>
      *
      * @param pointset
      */
-    rpolygon(const std::vector<point<T>>& pointset)
+    explicit rpolygon(const std::vector<point<T>>& pointset)
         : std::vector<point<T>> {pointset}
     {
     }
@@ -63,7 +63,7 @@ class rpolygon : public std::vector<point<T>>
      * @param pointset
      * @return rpolygon<T>
      */
-    static rpolygon<T> create_xmonotone(std::vector<point<T>>&& pointset);
+    static auto create_xmonotone(std::vector<point<T>>&& pointset) -> rpolygon<T>;
 
     /**
      * @brief Create a y-monotone object
@@ -71,7 +71,7 @@ class rpolygon : public std::vector<point<T>>
      * @param pointset
      * @return rpolygon<T>
      */
-    static rpolygon<T> create_ymonotone(std::vector<point<T>>&& pointset);
+    static auto create_ymonotone(std::vector<point<T>>&& pointset) -> rpolygon<T>;
 
     /**
      * @brief Create a regular object
@@ -79,14 +79,14 @@ class rpolygon : public std::vector<point<T>>
      * @param pointset
      * @return rpolygon<T>
      */
-    static rpolygon<T> create_regular(std::vector<point<T>> pointset);
+    static auto create_regular(std::vector<point<T>> pointset) -> rpolygon<T>;
 
     /**
      * @brief area
      *
      * @return auto
      */
-    T area() const;
+    auto area() const -> T;
 
     /**
      * @brief
@@ -97,21 +97,21 @@ class rpolygon : public std::vector<point<T>>
      * @return false
      */
     template <typename U>
-    bool contains(const point<U>& rhs) const;
+    auto contains(const point<U>& rhs) const -> bool;
 
     /**
      * @brief
      *
      * @return point<T>
      */
-    point<T> lower() const;
+    auto lower() const -> point<T>;
 
     /**
      * @brief
      *
      * @return point<T>
      */
-    point<T> upper() const;
+    auto upper() const -> point<T>;
 };
 
 /**
@@ -124,7 +124,7 @@ class rpolygon : public std::vector<point<T>>
  * @return Stream&
  */
 template <class Stream, typename T>
-Stream& operator<<(Stream& out, const rpolygon<T>& r)
+auto operator<<(Stream& out, const rpolygon<T>& r) -> Stream&
 {
     for (auto&& p : r)
     {
@@ -283,7 +283,7 @@ static void create_xmonotone_i(FwIter&& first, FwIter&& last)
  * @return rpolygon<T>
  */
 template <typename T>
-rpolygon<T> rpolygon<T>::create_xmonotone(std::vector<point<T>>&& pointset)
+auto rpolygon<T>::create_xmonotone(std::vector<point<T>>&& pointset) -> rpolygon<T>
 {
     create_xmonotone_i(pointset.begin(), pointset.end());
     return rpolygon<T> {std::forward<std::vector<point<T>>>(pointset)};
@@ -297,7 +297,7 @@ rpolygon<T> rpolygon<T>::create_xmonotone(std::vector<point<T>>&& pointset)
  * @return rpolygon<T>
  */
 template <typename T>
-rpolygon<T> rpolygon<T>::create_ymonotone(std::vector<point<T>>&& pointset)
+auto rpolygon<T>::create_ymonotone(std::vector<point<T>>&& pointset) -> rpolygon<T>
 {
     using D = std::vector<dualpoint<T>>; // x <-> y
     auto first = reinterpret_cast<D&>(pointset).begin();
@@ -381,7 +381,7 @@ rpolygon<T> rpolygon<T>::create_ymonotone(std::vector<point<T>>&& pointset)
  * @return T
  */
 template <typename T>
-T rpolygon<T>::area() const
+auto rpolygon<T>::area() const -> T
 {
     auto it = this->begin();
     assert(it != this->end());

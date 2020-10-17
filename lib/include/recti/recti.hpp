@@ -78,7 +78,7 @@ class point
      * @param rhs
      * @return constexpr point&
      */
-    constexpr point& operator+=(const vector2<T1>& rhs)
+    constexpr auto operator+=(const vector2<T1>& rhs) -> point&
     {
         this->_x += rhs.x();
         this->_y += rhs.y();
@@ -91,7 +91,7 @@ class point
      * @param rhs
      * @return constexpr point&
      */
-    constexpr point& operator-=(const vector2<T1>& rhs)
+    constexpr auto operator-=(const vector2<T1>& rhs) -> point&
     {
         this->_x -= rhs.x();
         this->_y -= rhs.y();
@@ -108,7 +108,7 @@ class point
      * @return false
      */
     template <typename U1, typename U2>
-    constexpr bool operator<(const point<U1, U2>& rhs) const
+    constexpr auto operator<(const point<U1, U2>& rhs) const -> bool
     {
         return std::tie(this->x(), this->y()) < std::tie(rhs.x(), rhs.y());
     }
@@ -168,7 +168,7 @@ class point
      * @return false
      */
     template <typename U1, typename U2>
-    constexpr bool operator==(const point<U1, U2>& rhs) const
+    constexpr auto operator==(const point<U1, U2>& rhs) const -> bool
     {
         return std::tie(this->x(), this->y()) == std::tie(rhs.x(), rhs.y());
     }
@@ -193,7 +193,7 @@ class point
      *
      * @return point<T2, T1>
      */
-    constexpr auto flip() const -> point<T2, T1>
+    [[nodiscard]] constexpr auto flip() const -> point<T2, T1>
     {
         return {this->y(), this->x()};
     }
@@ -209,7 +209,7 @@ class point
      * @return Stream&
      */
     template <class Stream>
-    friend Stream& operator<<(Stream& out, const point& p)
+    friend auto operator<<(Stream& out, const point& p) -> Stream&
     {
         out << '(' << p.x() << ", " << p.y() << ')';
         return out;
@@ -231,7 +231,7 @@ class dualpoint : public point<T1, T2>
      *
      * @return const T1&
      */
-    constexpr const T1& y() const // override intentionally
+    constexpr auto y() const -> const T1& // override intentionally
     {
         return this->_x;
     }
@@ -241,7 +241,7 @@ class dualpoint : public point<T1, T2>
      *
      * @return const T2&
      */
-    constexpr const T2& x() const // override intentionally
+    constexpr auto x() const -> const T2& // override intentionally
     {
         return this->_y;
     }
@@ -292,7 +292,7 @@ class interval : boost::totally_ordered<interval<T>>
      *
      * @return const T&
      */
-    constexpr const T& lower() const
+    constexpr auto lower() const -> const T&
     {
         return this->_lower;
     }
@@ -302,7 +302,7 @@ class interval : boost::totally_ordered<interval<T>>
      *
      * @return const T&
      */
-    constexpr const T& upper() const
+    constexpr auto upper() const -> const T&
     {
         return this->_upper;
     }
@@ -312,7 +312,7 @@ class interval : boost::totally_ordered<interval<T>>
      *
      * @return constexpr T
      */
-    constexpr T len() const
+    constexpr auto len() const -> T
     {
         return this->upper() - this->lower();
     }
@@ -324,7 +324,7 @@ class interval : boost::totally_ordered<interval<T>>
      * @return true
      * @return false
      */
-    constexpr bool operator==(const interval& rhs) const
+    constexpr auto operator==(const interval& rhs) const -> bool
     {
         return this->lower() == rhs.lower() && this->upper() == rhs.upper();
     }
@@ -336,7 +336,7 @@ class interval : boost::totally_ordered<interval<T>>
      * @return true
      * @return false
      */
-    constexpr bool operator<(const interval& rhs) const
+    constexpr auto operator<(const interval& rhs) const -> bool
     {
         return this->upper() < rhs.lower();
     }
@@ -350,7 +350,7 @@ class interval : boost::totally_ordered<interval<T>>
      * @return false
      */
     template <typename U>
-    constexpr bool contains(const interval<U>& a) const
+    constexpr auto contains(const interval<U>& a) const -> bool
     {
         return !(a.lower() < this->lower() || this->upper() < a.upper());
     }
@@ -362,7 +362,7 @@ class interval : boost::totally_ordered<interval<T>>
      * @return true
      * @return false
      */
-    constexpr bool contains(const T& a) const
+    constexpr auto contains(const T& a) const -> bool
     {
         return !(a < this->lower() || this->upper() < a);
     }
@@ -406,7 +406,7 @@ struct rectangle : point<interval<T>>
      * @return true
      * @return false
      */
-    constexpr bool contains(const point<T>& rhs) const
+    [[nodiscard]] constexpr auto contains(const point<T>& rhs) const -> bool
     {
         return this->x().contains(rhs.x()) && this->y().contains(rhs.y());
     }
@@ -416,7 +416,7 @@ struct rectangle : point<interval<T>>
      *
      * @return point<T>
      */
-    constexpr point<T> lower() const
+    constexpr auto lower() const -> point<T>
     {
         return {this->x().lower(), this->y().lower()};
     }
@@ -426,7 +426,7 @@ struct rectangle : point<interval<T>>
      *
      * @return point<T>
      */
-    constexpr point<T> upper() const
+    constexpr auto upper() const -> point<T>
     {
         return {this->x().upper(), this->y().upper()};
     }
@@ -436,7 +436,7 @@ struct rectangle : point<interval<T>>
      *
      * @return constexpr T
      */
-    constexpr T area() const
+    constexpr auto area() const -> T
     {
         return this->x().len() * this->y().len();
     }
@@ -451,7 +451,7 @@ struct rectangle : point<interval<T>>
      * @return Stream&
      */
     template <class Stream>
-    friend Stream& operator<<(Stream& out, const rectangle& r)
+    friend auto operator<<(Stream& out, const rectangle& r) -> Stream&
     {
         out << r.lower() << " rectangle " << r.upper();
         return out;
@@ -498,7 +498,7 @@ struct hsegment : point<interval<T>, T>
      * @return false
      */
     template <typename U>
-    constexpr bool contains(const point<U>& rhs) const
+    constexpr auto contains(const point<U>& rhs) const -> bool
     {
         return this->y() == rhs.y() && this->x().contains(rhs.x());
     }
@@ -544,7 +544,7 @@ struct vsegment : point<T, interval<T>>
      * @return false
      */
     template <typename U>
-    constexpr bool contains(const point<U>& rhs) const
+    constexpr auto contains(const point<U>& rhs) const -> bool
     {
         return this->x() == rhs.x() && this->y().contains(rhs.y());
     }

@@ -63,7 +63,7 @@ class polygon : public std::vector<point<T>>
      * @param pointset
      * @return polygon<T>
      */
-    static polygon<T> create_ymonotone(std::vector<point<T>> pointset);
+    static auto create_ymonotone(std::vector<point<T>> pointset) -> polygon<T>;
 
     /**
      * @brief Create an x-monotone object
@@ -71,7 +71,7 @@ class polygon : public std::vector<point<T>>
      * @param pointset
      * @return polygon<T>
      */
-    static polygon<T> create_xmonotone(std::vector<point<T>> pointset);
+    static auto create_xmonotone(std::vector<point<T>> pointset) -> polygon<T>;
 
     /**
      * @brief Create a regular object
@@ -79,14 +79,14 @@ class polygon : public std::vector<point<T>>
      * @param pointset
      * @return polygon<T>
      */
-    static polygon<T> create_regular(std::vector<point<T>> pointset);
+    static auto create_regular(std::vector<point<T>> pointset) -> polygon<T>;
 
     /**
      * @brief area
      *
      * @return auto
      */
-    T area() const;
+    auto area() const -> T;
 
     /**
      * @brief
@@ -97,21 +97,21 @@ class polygon : public std::vector<point<T>>
      * @return false
      */
     template <typename U>
-    bool contains(const point<U>& rhs) const;
+    auto contains(const point<U>& rhs) const -> bool;
 
     /**
      * @brief
      *
      * @return point<T>
      */
-    point<T> lower() const;
+    auto lower() const -> point<T>;
 
     /**
      * @brief
      *
      * @return point<T>
      */
-    point<T> upper() const;
+    auto upper() const -> point<T>;
 };
 
 /**
@@ -124,7 +124,7 @@ class polygon : public std::vector<point<T>>
  * @return Stream&
  */
 template <class Stream, typename T>
-Stream& operator<<(Stream& out, const polygon<T>& r)
+auto operator<<(Stream& out, const polygon<T>& r) -> Stream&
 {
     for (auto&& p : r)
     {
