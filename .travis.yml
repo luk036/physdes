@@ -92,7 +92,7 @@ install:
   - conda config --set always_yes yes --set changeps1 no
   - conda update -q conda
   - conda info -a
-  - conda install -c conda-forge benchmark libboost fmt spdlog
+  - conda install -c conda-forge benchmark boost fmt spdlog
 
 script:
   - |
