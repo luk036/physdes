@@ -63,7 +63,8 @@ class rpolygon : public std::vector<point<T>>
      * @param pointset
      * @return rpolygon<T>
      */
-    static auto create_xmonotone(std::vector<point<T>>&& pointset) -> rpolygon<T>;
+    static auto create_xmonotone(std::vector<point<T>>&& pointset)
+        -> rpolygon<T>;
 
     /**
      * @brief Create a y-monotone object
@@ -71,7 +72,8 @@ class rpolygon : public std::vector<point<T>>
      * @param pointset
      * @return rpolygon<T>
      */
-    static auto create_ymonotone(std::vector<point<T>>&& pointset) -> rpolygon<T>;
+    static auto create_ymonotone(std::vector<point<T>>&& pointset)
+        -> rpolygon<T>;
 
     /**
      * @brief Create a regular object
@@ -283,7 +285,8 @@ static void create_xmonotone_i(FwIter&& first, FwIter&& last)
  * @return rpolygon<T>
  */
 template <typename T>
-auto rpolygon<T>::create_xmonotone(std::vector<point<T>>&& pointset) -> rpolygon<T>
+auto rpolygon<T>::create_xmonotone(std::vector<point<T>>&& pointset)
+    -> rpolygon<T>
 {
     create_xmonotone_i(pointset.begin(), pointset.end());
     return rpolygon<T> {std::forward<std::vector<point<T>>>(pointset)};
@@ -297,7 +300,8 @@ auto rpolygon<T>::create_xmonotone(std::vector<point<T>>&& pointset) -> rpolygon
  * @return rpolygon<T>
  */
 template <typename T>
-auto rpolygon<T>::create_ymonotone(std::vector<point<T>>&& pointset) -> rpolygon<T>
+auto rpolygon<T>::create_ymonotone(std::vector<point<T>>&& pointset)
+    -> rpolygon<T>
 {
     using D = std::vector<dualpoint<T>>; // x <-> y
     auto first = reinterpret_cast<D&>(pointset).begin();

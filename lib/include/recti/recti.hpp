@@ -16,11 +16,9 @@ namespace recti
  * @tparam T2
  */
 template <typename T1, typename T2 = T1>
-class point
-    : boost::totally_ordered<point<T1, T2>,
-        boost::subtractable<point<T1, T2>,           // point - point
-           boost::additive2<point<T1, T2>, vector2<T1>
-                  > > >
+class point : boost::totally_ordered<point<T1, T2>,
+                  boost::subtractable<point<T1, T2>, // point - point
+                      boost::additive2<point<T1, T2>, vector2<T1>>>>
 {
   protected:
     T1 _x; //!< x coordinate

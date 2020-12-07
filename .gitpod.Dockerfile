@@ -2,14 +2,19 @@ FROM gitpod/workspace-full
 
 USER root
 # Install util tools.
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+RUN apt-add-repository https://cli.github.com/packages
+
 RUN apt-get update \
  && apt-get install -y \
   apt-utils \
   sudo \
   git \
+  gh \
   lcov \
   less \
   neofetch \
+  neovim \
   asciinema \
   tmux \
   vifm \
@@ -20,6 +25,14 @@ RUN apt-get update \
   libspdlog-dev \
   cppcheck \
   ninja-build \
+  cmatrix \
+  cowsay \
+  cowthink \
+  figlet \
+  fortune \
+  lolcat \
+  toilet \
+  tty-clock \
   wget
 
 RUN mkdir -p /workspace/data \
@@ -34,11 +47,6 @@ RUN mkdir -p /workspace/data \
 #     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
 #     echo "conda activate base" >> ~/.bashrc
     
-# RUN chown -R gitpod:gitpod /opt/conda \
-#     && chmod -R 777 /opt/conda \
-#     && chown -R gitpod:gitpod /home/gitpod/.conda \
-#     && chmod -R 777 /home/gitpod/.conda
-
 # RUN /opt/conda/bin/conda config --set always_yes yes --set changeps1 no \
 #     && /opt/conda/bin/conda update -q conda \
 #     && /opt/conda/bin/conda info -a
@@ -50,8 +58,13 @@ RUN mkdir -p /workspace/data \
 #     benchmark \
 #     fmt \
 #     lapack \
-#     libboost \
+#     boost \
 #     spdlog \
 #     cppcheck
+
+# RUN chown -R gitpod:gitpod /opt/conda \
+#     && chmod -R 777 /opt/conda \
+#     && chown -R gitpod:gitpod /home/gitpod/.conda \
+#     && chmod -R 777 /home/gitpod/.conda
 
 RUN apt-get clean && rm -rf /var/cache/apt/* && rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
