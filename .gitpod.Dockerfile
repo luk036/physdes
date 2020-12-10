@@ -27,7 +27,6 @@ RUN apt-get update \
   ninja-build \
   cmatrix \
   cowsay \
-  cowthink \
   figlet \
   fortune \
   lolcat \
