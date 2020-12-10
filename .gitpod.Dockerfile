@@ -2,15 +2,11 @@ FROM gitpod/workspace-full
 
 USER root
 # Install util tools.
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
-RUN apt-add-repository https://cli.github.com/packages
-
 RUN apt-get update \
  && apt-get install -y \
   apt-utils \
   sudo \
   git \
-  gh \
   lcov \
   less \
   neofetch \
