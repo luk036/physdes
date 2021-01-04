@@ -1,10 +1,12 @@
 /*
  *  Distributed under the MIT License (See accompanying file /LICENSE )
  */
-#include "recti/vector2.hpp"
+#include "recti/recti.hpp"
 // #include <boost/multiprecision/cpp_int.hpp>
 #include <doctest.h>
 #include <iostream>
+
+using namespace recti;
 
 TEST_CASE("vector2")
 {

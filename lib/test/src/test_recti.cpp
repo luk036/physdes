@@ -47,6 +47,7 @@ TEST_CASE("Interval test")
     CHECK(a.contains(4));
     CHECK(a.contains(8));
     CHECK(a.contains(b));
+    CHECK(!b.contains(a));
 }
 
 TEST_CASE("Rectangle test")
