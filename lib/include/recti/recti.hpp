@@ -221,8 +221,7 @@ class vector2
  */
 template <typename T1, typename T2 = T1>
 class point : boost::totally_ordered<point<T1, T2>,
-                  boost::subtractable<point<T1, T2>, // point - point
-                      boost::additive2<point<T1, T2>, vector2<T1>>>>
+                boost::additive2<point<T1, T2>, vector2<T1>>>
 {
   protected:
     T1 _x; //!< x coordinate
@@ -300,7 +299,7 @@ class point : boost::totally_ordered<point<T1, T2>,
         return *this;
     }
 
-    constexpr auto operator-(const point& rhs) -> vector2<T1>&
+    constexpr auto operator-(const point& rhs) const -> vector2<T1>
     {
         return {this->x() - rhs.x(), this->y() - rhs.y()};
     }

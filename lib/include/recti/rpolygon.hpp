@@ -138,8 +138,6 @@ auto operator<<(Stream& out, const rpolygon<T>& r) -> Stream&
 } // namespace recti
 
 #include <algorithm>
-#include <functional>
-#include <numeric> // import accumulate
 
 namespace recti
 {
@@ -156,32 +154,20 @@ template <typename FwIter>
 void rpolygon<T>::create_ymono_rpolygon(FwIter&& first, FwIter&& last)
 {
     auto upward = [](const auto& a, const auto& b) {
-        return std::tie(a.y(), a.x()) < std::tie(b.y(), b.x());
-    };
-    auto min_pt = *std::min_element(first, last, upward);
-    auto max_pt = *std::max_element(first, last, upward);
-    auto dx = max_pt.x() - min_pt.x();
-    auto dy = max_pt.y() - min_pt.y();
-
-    FwIter middle;
-    if (dx < 0)
-    {
-        middle = std::partition(first, last, [&](const auto& a) {
-            return dx * (a.y() - min_pt.y()) > (a.x() - min_pt.x()) * dy;
-        });
-    }
-    else
-    {
-        middle = std::partition(first, last, [&](const auto& a) {
-            return dx * (a.y() - min_pt.y()) < (a.x() - min_pt.x()) * dy;
-        });
-    }
-
+        return std::tie(a.y(), a.x()) < std::tie(b.y(), b.x()); };
     auto downward = [](const auto& a, const auto& b) {
-        return std::tie(a.y(), a.x()) > std::tie(b.y(), b.x());
-    };
-    std::sort(first, middle, upward);
-    std::sort(middle, last, downward);
+        return std::tie(a.y(), a.x()) > std::tie(b.y(), b.x()); };
+    auto [min, max] = std::minmax_element(first, last, upward);
+    auto min_pt = *min, max_pt = *max;
+    auto d = max_pt - min_pt;
+    auto l2r = [&](const auto& a) {
+        return d.x()*(a.y() - min_pt.y()) > (a.x() - min_pt.x())*d.y(); };
+    auto r2l = [&](const auto& a) {
+        return d.x()*(a.y() - min_pt.y()) < (a.x() - min_pt.x())*d.y(); };
+    auto middle = (d.x() < 0)? std::partition(first, last, std::move(l2r))
+        : std::partition(first, last, std::move(r2l));
+    std::sort(first, middle, std::move(upward));
+    std::sort(middle, last, std::move(downward));
 }
 
 
