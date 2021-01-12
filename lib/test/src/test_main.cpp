@@ -10,8 +10,8 @@
 //     std::cout << "125 >> 32 = " << b << "\n";
 // }
 
-TEST_CASE("sizeof")
-{
-    CHECK(sizeof(int) == 4);
-    CHECK(sizeof(size_t) == 8);
-}
+// TEST_CASE("sizeof")
+// {
+//     CHECK(sizeof(int) == 4);
+//     CHECK(sizeof(size_t) == 8);
+// }
