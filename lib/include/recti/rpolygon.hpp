@@ -158,8 +158,8 @@ void rpolygon<T>::create_ymono_rpolygon(FwIter&& first, FwIter&& last)
     auto downward = [](const auto& a, const auto& b) {
         return std::tie(a.y(), a.x()) > std::tie(b.y(), b.x()); };
     auto [min, max] = std::minmax_element(first, last, upward);
-    auto min_pt = *min, max_pt = *max;
-    auto d = max_pt - min_pt;
+    auto min_pt = *min;
+    auto d = *max - min_pt;
     auto l2r = [&](const auto& a) {
         return d.x()*(a.y() - min_pt.y()) > (a.x() - min_pt.x())*d.y(); };
     auto r2l = [&](const auto& a) {
