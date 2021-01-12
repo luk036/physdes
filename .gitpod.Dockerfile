@@ -15,6 +15,7 @@ RUN apt-get update \
   tmux \
   vifm \
   w3m \
+  librange-v3-dev \
   libbenchmark-dev \
   libfmt-dev \
   libboost-dev \
