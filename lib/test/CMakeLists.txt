@@ -23,7 +23,7 @@ file (GLOB TEST_SOURCE_FILES "${TEST_SRC_PATH}/*.cpp")
 add_executable (${TEST_MAIN} ${TEST_SOURCE_FILES})
 
 #add the library
-target_link_libraries (${TEST_MAIN} ${LIB_NAME} ${LIBS} doctest Threads::Threads)
+target_link_libraries (${TEST_MAIN} ${LIB_NAME} ${LIBS} Threads::Threads)
 
 # Turn on CMake testing capabilities
 enable_testing()

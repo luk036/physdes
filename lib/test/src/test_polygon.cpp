@@ -1,4 +1,4 @@
-#include <doctest.h>
+#include <doctest/doctest.h>
 #include <iostream>
 #include <recti/polygon.hpp>
 #include <recti/recti.hpp>

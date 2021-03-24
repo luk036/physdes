@@ -3,7 +3,7 @@
  */
 #include "recti/fractions.hpp"
 // #include <boost/multiprecision/cpp_int.hpp>
-#include <doctest.h>
+#include <doctest/doctest.h>
 #include <iostream>
 
 using namespace fun;
