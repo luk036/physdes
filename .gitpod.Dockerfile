@@ -8,6 +8,11 @@ RUN apt-get update \
   apt-utils \
   aria2 \
 # c++ stuff \
+  gcc-10 \
+  g++-10 \
+  clang-13 \
+  ccache \
+  cmake-curses-gui \
   clang-format \
   cppcheck \
   doctest-dev \
