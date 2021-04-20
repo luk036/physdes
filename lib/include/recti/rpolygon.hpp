@@ -88,7 +88,7 @@ class rpolygon : public std::vector<point<T>>
      *
      * @return auto
      */
-    auto area() const -> T;
+    [[nodiscard]] auto area() const -> T;
 
     /**
      * @brief
@@ -106,14 +106,14 @@ class rpolygon : public std::vector<point<T>>
      *
      * @return point<T>
      */
-    auto lower() const -> point<T>;
+    [[nodiscard]] auto lower() const -> point<T>;
 
     /**
      * @brief
      *
      * @return point<T>
      */
-    auto upper() const -> point<T>;
+    [[nodiscard]] auto upper() const -> point<T>;
 };
 
 /**

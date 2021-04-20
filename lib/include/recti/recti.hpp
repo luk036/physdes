@@ -49,7 +49,7 @@ class vector2
      *
      * @return constexpr const T&
      */
-    constexpr auto x() const -> const T&
+    [[nodiscard]] constexpr auto x() const -> const T&
     {
         return this->_x;
     }
@@ -59,7 +59,7 @@ class vector2
      *
      * @return constexpr const T&
      */
-    constexpr auto y() const -> const T&
+    [[nodiscard]] constexpr auto y() const -> const T&
     {
         return this->_y;
     }
@@ -258,7 +258,7 @@ class point : boost::totally_ordered<point<T1, T2>,
      *
      * @return const T1&
      */
-    constexpr auto x() const -> const T1&
+    [[nodiscard]] constexpr auto x() const -> const T1&
     {
         return this->_x;
     }
@@ -268,7 +268,7 @@ class point : boost::totally_ordered<point<T1, T2>,
      *
      * @return const T2&
      */
-    constexpr auto y() const -> const T2&
+    [[nodiscard]] constexpr auto y() const -> const T2&
     {
         return this->_y;
     }
@@ -498,7 +498,7 @@ class interval : boost::totally_ordered<interval<T>>
      *
      * @return const T&
      */
-    constexpr auto lower() const -> const T&
+    [[nodiscard]] constexpr auto lower() const -> const T&
     {
         return this->_lower;
     }
@@ -508,7 +508,7 @@ class interval : boost::totally_ordered<interval<T>>
      *
      * @return const T&
      */
-    constexpr auto upper() const -> const T&
+    [[nodiscard]] constexpr auto upper() const -> const T&
     {
         return this->_upper;
     }
@@ -518,7 +518,7 @@ class interval : boost::totally_ordered<interval<T>>
      *
      * @return constexpr T
      */
-    constexpr auto len() const -> T
+    [[nodiscard]] constexpr auto len() const -> T
     {
         return this->upper() - this->lower();
     }
@@ -556,7 +556,7 @@ class interval : boost::totally_ordered<interval<T>>
      * @return false
      */
     template <typename U>
-    constexpr auto contains(const interval<U>& a) const -> bool
+    [[nodiscard]] constexpr auto contains(const interval<U>& a) const -> bool
     {
         return !(a.lower() < this->lower() || this->upper() < a.upper());
     }
@@ -568,7 +568,7 @@ class interval : boost::totally_ordered<interval<T>>
      * @return true
      * @return false
      */
-    constexpr auto contains(const T& a) const -> bool
+    [[nodiscard]] constexpr auto contains(const T& a) const -> bool
     {
         return !(a < this->lower() || this->upper() < a);
     }
@@ -579,6 +579,7 @@ class interval : boost::totally_ordered<interval<T>>
  * @brief Rectangle (Rectilinear)
  *
  * @tparam T
+ * @todo use "__attribute__((aligned(0)))" to align struct 'rectangle<int>' to 0 bytes
  */
 template <typename T>
 struct rectangle : point<interval<T>>
@@ -613,7 +614,7 @@ struct rectangle : point<interval<T>>
      * @return false
      */
     template <typename U1, typename U2>
-    constexpr auto contains(const point<U1, U2>& rhs) const -> bool
+    [[nodiscard]] constexpr auto contains(const point<U1, U2>& rhs) const -> bool
     {
         return this->x().contains(rhs.x()) && this->y().contains(rhs.y());
     }
@@ -623,7 +624,7 @@ struct rectangle : point<interval<T>>
      *
      * @return point<T>
      */
-    constexpr auto lower() const -> point<T>
+    [[nodiscard]] constexpr auto lower() const -> point<T>
     {
         return {this->x().lower(), this->y().lower()};
     }
@@ -633,7 +634,7 @@ struct rectangle : point<interval<T>>
      *
      * @return point<T>
      */
-    constexpr auto upper() const -> point<T>
+    [[nodiscard]] constexpr auto upper() const -> point<T>
     {
         return {this->x().upper(), this->y().upper()};
     }
@@ -643,7 +644,7 @@ struct rectangle : point<interval<T>>
      *
      * @return constexpr T
      */
-    constexpr auto area() const -> T
+    [[nodiscard]] constexpr auto area() const -> T
     {
         return this->x().len() * this->y().len();
     }
@@ -670,6 +671,7 @@ struct rectangle : point<interval<T>>
  * @brief Horizontal Line Segment
  *
  * @tparam T
+ * @todo pack
  */
 template <typename T>
 struct hsegment : point<interval<T>, T>
@@ -716,6 +718,7 @@ struct hsegment : point<interval<T>, T>
  * @brief vsegment Line Segment
  *
  * @tparam T
+ * @todo pack
  */
 template <typename T>
 struct vsegment : point<T, interval<T>>
