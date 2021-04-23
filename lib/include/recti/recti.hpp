@@ -219,6 +219,7 @@ class vector2
  * @tparam T1
  * @tparam T2
  */
+#pragma pack(push, 1)
 template <typename T1, typename T2 = T1>
 class point : boost::totally_ordered<point<T1, T2>,
                 boost::additive2<point<T1, T2>, vector2<T1>>>
@@ -421,6 +422,7 @@ class point : boost::totally_ordered<point<T1, T2>,
         return out;
     }
 };
+#pragma pack(pop)
 
 /**
  * @brief 2D point
@@ -428,6 +430,7 @@ class point : boost::totally_ordered<point<T1, T2>,
  * @tparam T1
  * @tparam T2
  */
+#pragma pack(push, 1)
 template <typename T1, typename T2 = T1>
 class dualpoint : public point<T1, T2>
 {
@@ -452,6 +455,7 @@ class dualpoint : public point<T1, T2>
         return this->_y;
     }
 };
+#pragma pack(pop)
 
 
 /**
@@ -671,6 +675,7 @@ struct rectangle : point<interval<T>>
  *
  * @tparam T
  */
+#pragma pack(push, 1)
 template <typename T>
 struct hsegment : point<interval<T>, T>
 {
@@ -710,6 +715,7 @@ struct hsegment : point<interval<T>, T>
         return this->y() == rhs.y() && this->x().contains(rhs.x());
     }
 };
+#pragma pack(pop)
 
 
 /**
@@ -717,6 +723,7 @@ struct hsegment : point<interval<T>, T>
  *
  * @tparam T
  */
+#pragma pack(push, 1)
 template <typename T>
 struct vsegment : point<T, interval<T>>
 {
@@ -756,5 +763,6 @@ struct vsegment : point<T, interval<T>>
         return this->x() == rhs.x() && this->y().contains(rhs.y());
     }
 };
+#pragma pack(pop)
 
 } // namespace recti
