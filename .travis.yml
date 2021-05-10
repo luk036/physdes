@@ -35,14 +35,15 @@ matrix:
       addons: *gcc10
       env: COMPILER=gcc GCC=10 BUILD_TYPE='Coverage'
     - os: linux
-      addons: &clang9
+      addons: &clang10
         apt:
           packages:
-            - clang-9
-      env: COMPILER=clang CLANG=9 BUILD_TYPE='Debug'
+            - clang-10
+            - lcov
+      env: COMPILER=clang CLANG=10 BUILD_TYPE='Debug'
     - os: linux
-      addons: *clang9
-      env: COMPILER=clang CLANG=9 BUILD_TYPE='Release'
+      addons: *clang10
+      env: COMPILER=clang CLANG=10 BUILD_TYPE='Release'
     - os: osx
       osx_image: xcode12
       addons:
