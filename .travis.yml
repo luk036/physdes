@@ -39,7 +39,6 @@ matrix:
         apt:
           packages:
             - clang-9
-            - lcov
       env: COMPILER=clang CLANG=9 BUILD_TYPE='Debug'
     - os: linux
       addons: *clang9
