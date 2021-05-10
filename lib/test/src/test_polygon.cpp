@@ -14,10 +14,7 @@ TEST_CASE("Polygon test")
         {0, -4}, {-4, 3}, {-6, -2}, {5, 1}, {2, 2}, {3, -3}, {-3, -4}, {1, 4}};
 
     cout << "-------------------------------\n";
-    // polygon<int>::create_test_polygon(S.begin(), S.end());
-
-    for (auto&& p : S)
-    {
-        std::cout << "  \\draw " << p << ";\n";
-    }
+    polygon<int>::create_ymono_polygon(S.begin(), S.end());
+    auto P = polygon<int>(S);
+    CHECK(P.signed_area_x2() == 102);
 }

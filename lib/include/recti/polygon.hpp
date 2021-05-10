@@ -13,30 +13,52 @@ namespace recti
  * @tparam T
  */
 template <typename T>
-class polygon : public std::vector<point<T>>
+class polygon
 {
   private:
-    /**
-     * @brief Construct a new polygon object
-     *
-     * @param pointset
-     */
-    explicit polygon(std::vector<point<T>>&& pointset) noexcept
-        : std::vector<point<T>> {std::move(pointset)}
-    {
-    }
-
-    /**
-     * @brief Construct a new polygon object
-     *
-     * @param pointset
-     */
-    explicit polygon(const std::vector<point<T>>& pointset)
-        : std::vector<point<T>> {std::move(pointset)}
-    {
-    }
+    point<T> _origin;
+    std::vector<vector2<T>> _vecs;
 
   public:
+
+    /**
+     * @brief Construct a new polygon object
+     *
+     * @param pointset
+     */
+    explicit constexpr polygon(const std::vector<point<T>>& pointset)
+        : _origin {pointset[0]}
+    {
+        for (auto i = 1U; i != pointset.size(); ++i)
+        {
+            this->_vecs.push_back(pointset[i] - this->_origin);
+        }
+    }
+
+    /**
+     * @brief
+     *
+     * @param rhs
+     * @return constexpr point&
+     */
+    constexpr auto operator+=(const vector2<T>& rhs) -> polygon&
+    {
+        this->_origin += rhs;
+        return *this;
+    }
+
+    constexpr auto signed_area_x2() const -> T
+    {
+        auto n = this->_vecs.size();  // of corners
+        auto res = T(0);
+        for (auto i = 0U; i != n - 1; ++i)
+        {
+            res += this->_vecs[i].cross(this->_vecs[i+1]);
+        }
+        return res;
+    }
+
+
     /**
      * @brief Create a ymono polygon object
      *
@@ -80,13 +102,6 @@ class polygon : public std::vector<point<T>>
      * @return polygon<T>
      */
     static auto create_regular(std::vector<point<T>> pointset) -> polygon<T>;
-
-    /**
-     * @brief area
-     *
-     * @return auto
-     */
-    auto area() const -> T;
 
     /**
      * @brief

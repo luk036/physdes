@@ -16,6 +16,8 @@ TEST_CASE("Rectilinear Polygon test")
 
     cout << "-------------------------------\n";
     rpolygon<int>::create_ymono_rpolygon(S.begin(), S.end());
+    auto P = rpolygon<int>(S);
+    CHECK(P.signed_area() == 52);
 
     // for (auto&& p : S)
     // {

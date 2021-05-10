@@ -13,30 +13,53 @@ namespace recti
  * @tparam T
  */
 template <typename T>
-class rpolygon : public std::vector<point<T>>
+class rpolygon
 {
   private:
-    /**
-     * @brief Construct a new rpolygon object
-     *
-     * @param pointset
-     */
-    explicit rpolygon(std::vector<point<T>>&& pointset) noexcept
-        : std::vector<point<T>> {std::move(pointset)}
-    {
-    }
-
-    /**
-     * @brief Construct a new rpolygon object
-     *
-     * @param pointset
-     */
-    explicit rpolygon(const std::vector<point<T>>& pointset)
-        : std::vector<point<T>> {pointset}
-    {
-    }
+    point<T> _origin;
+    std::vector<vector2<T>> _vecs; // @todo: add custom allocator support
 
   public:
+
+    /**
+     * @brief Construct a new rpolygon object
+     *
+     * @param pointset
+     */
+    explicit constexpr rpolygon(const std::vector<point<T>>& pointset)
+        : _origin {pointset[0]}
+    {
+        for (auto i = 1U; i != pointset.size(); ++i)
+        {
+            this->_vecs.push_back(pointset[i] - this->_origin);
+        }
+    }
+
+    /**
+     * @brief
+     *
+     * @param rhs
+     * @return constexpr point&
+     */
+    constexpr auto operator+=(const vector2<T>& rhs) -> rpolygon&
+    {
+        this->_origin += rhs;
+        return *this;
+    }
+
+    constexpr auto signed_area() const -> T
+    {
+        auto yi = T(0);
+        auto res = T(0);
+        for (auto&& v : this->_vecs)
+        {
+            res += (v.y() - yi) * v.x();
+            yi = v.y();
+        }
+        return res;
+    }
+
+
     /**
      * @brief Create a ymono rpolygon object
      *
@@ -147,7 +170,7 @@ namespace recti
  *
  * @tparam T
  * @param pointset
- * @return polygon<T>
+ * @return rpolygon<T>
  */
 template <typename T>
 template <typename FwIter>
