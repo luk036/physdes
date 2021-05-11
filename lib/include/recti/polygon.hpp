@@ -49,11 +49,12 @@ class polygon
 
     constexpr auto signed_area_x2() const -> T
     {
-        auto n = this->_vecs.size();  // of corners
-        auto res = T(0);
-        for (auto i = 0U; i != n - 1; ++i)
+        auto&& vecs = this->_vecs;
+        auto n = this->_vecs.size();
+        auto res = vecs[0].x() * vecs[1].y() - vecs[n-1].x() * vecs[n-2].y();
+        for (auto i = 1U; i != n - 1; ++i)
         {
-            res += this->_vecs[i].cross(this->_vecs[i+1]);
+            res += vecs[i].x() * (vecs[i + 1].y() - vecs[i - 1].y());
         }
         return res;
     }

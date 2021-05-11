@@ -49,12 +49,11 @@ class rpolygon
 
     constexpr auto signed_area() const -> T
     {
-        auto yi = T(0);
-        auto res = T(0);
-        for (auto&& v : this->_vecs)
+        auto&& vecs = this->_vecs;
+        auto res = vecs[0].x() * vecs[0].y();
+        for (auto i = 1U; i != vecs.size(); ++i)
         {
-            res += (v.y() - yi) * v.x();
-            yi = v.y();
+            res += vecs[i].x() * (vecs[i].y() - vecs[i - 1].y());
         }
         return res;
     }
