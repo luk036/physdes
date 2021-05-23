@@ -49,7 +49,7 @@ class vector2
      *
      * @return constexpr const T&
      */
-    [[nodiscard]] constexpr auto x() const -> const T&
+    [[nodiscard]] constexpr auto x() const noexcept -> const T&
     {
         return this->_x;
     }
@@ -59,7 +59,7 @@ class vector2
      *
      * @return constexpr const T&
      */
-    [[nodiscard]] constexpr auto y() const -> const T&
+    [[nodiscard]] constexpr auto y() const noexcept -> const T&
     {
         return this->_y;
     }
@@ -270,7 +270,7 @@ class point : boost::totally_ordered<point<T1, T2>,
      *
      * @return const T1&
      */
-    [[nodiscard]] constexpr auto x() const -> const T1&
+    [[nodiscard]] constexpr auto x() const noexcept -> const T1&
     {
         return this->_x;
     }
@@ -280,7 +280,7 @@ class point : boost::totally_ordered<point<T1, T2>,
      *
      * @return const T2&
      */
-    [[nodiscard]] constexpr auto y() const -> const T2&
+    [[nodiscard]] constexpr auto y() const noexcept -> const T2&
     {
         return this->_y;
     }
