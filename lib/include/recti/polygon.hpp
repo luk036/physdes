@@ -20,7 +20,6 @@ class polygon
     std::vector<vector2<T>> _vecs;
 
   public:
-
     /**
      * @brief Construct a new polygon object
      *
@@ -47,62 +46,22 @@ class polygon
         return *this;
     }
 
+    /**
+     * @brief
+     *
+     * @return T
+     */
     constexpr auto signed_area_x2() const -> T
     {
-        auto&& vecs = this->_vecs;
+        auto&& vs = this->_vecs;
         auto n = this->_vecs.size();
-        auto res = vecs[0].x() * vecs[1].y() - vecs[n-1].x() * vecs[n-2].y();
+        auto res = vs[0].x() * vs[1].y() - vs[n - 1].x() * vs[n - 2].y();
         for (auto i = 1U; i != n - 1; ++i)
         {
-            res += vecs[i].x() * (vecs[i + 1].y() - vecs[i - 1].y());
+            res += vs[i].x() * (vs[i + 1].y() - vs[i - 1].y());
         }
         return res;
     }
-
-
-    /**
-     * @brief Create a ymono polygon object
-     *
-     * @tparam FwIter
-     * @param first
-     * @param last
-     */
-    template <typename FwIter>
-    static void create_ymono_polygon(FwIter&& first, FwIter&& last);
-
-    /**
-     * @brief Create a test polygon object
-     *
-     * @tparam FwIter
-     * @param first
-     * @param last
-     */
-    template <typename FwIter>
-    static void create_test_polygon(FwIter&& first, FwIter&& last);
-
-    /**
-     * @brief Create a y-monotone object
-     *
-     * @param pointset
-     * @return polygon<T>
-     */
-    static auto create_ymonotone(std::vector<point<T>> pointset) -> polygon<T>;
-
-    /**
-     * @brief Create an x-monotone object
-     *
-     * @param pointset
-     * @return polygon<T>
-     */
-    static auto create_xmonotone(std::vector<point<T>> pointset) -> polygon<T>;
-
-    /**
-     * @brief Create a regular object
-     *
-     * @param pointset
-     * @return polygon<T>
-     */
-    static auto create_regular(std::vector<point<T>> pointset) -> polygon<T>;
 
     /**
      * @brief
@@ -163,29 +122,42 @@ namespace recti
  *
  * @tparam T
  * @param pointset
- * @return polygon<T>
  */
-template <typename T>
 template <typename FwIter>
-void polygon<T>::create_ymono_polygon(FwIter&& first, FwIter&& last)
+inline void create_ymono_polygon(FwIter&& first, FwIter&& last)
 {
     auto up = [](const auto& a, const auto& b) {
         return std::tie(a.y(), a.x()) < std::tie(b.y(), b.x());
     };
-    auto min_pt = *std::min_element(first, last, up);
-    auto max_pt = *std::max_element(first, last, up);
-    auto dx = max_pt.x() - min_pt.x();
-    auto dy = max_pt.y() - min_pt.y();
-    auto middle = std::partition(first, last, [&](const auto& a) {
-        return dx * (a.y() - min_pt.y()) < (a.x() - min_pt.x()) * dy;
-    });
-
     auto down = [](const auto& a, const auto& b) {
         return std::tie(a.y(), a.x()) > std::tie(b.y(), b.x());
     };
-    std::sort(first, middle, up);
-    std::sort(middle, last, down);
+    auto topmost_pt = *std::max_element(first, last, up);
+    auto bottommost_pt = *std::min_element(first, last, up);
+    auto d = topmost_pt - bottommost_pt;
+    auto right_left = [&](const auto& a) {
+        return d.x() * (a.y() - bottommost_pt.y()) <
+            d.y() * (a.x() - bottommost_pt.x());
+    };
+    auto middle = std::partition(first, last, std::move(right_left));
+    std::sort(first, middle, std::move(up));
+    std::sort(middle, last, std::move(down));
 }
+
+
+// /**
+//  * @brief
+//  *
+//  * @tparam T
+//  * @param pointset
+//  */
+// template <typename FwIter>
+// inline void create_xmono_polygon(FwIter&& first, FwIter&& last)
+// {
+//     auto du_first = dual_iterator<FwIter>(first);
+//     auto du_last = dual_iterator<FwIter>(last);
+//     return create_ymono_polygon(du_first, du_last);
+// }
 
 /**
  * @brief
@@ -194,6 +166,27 @@ void polygon<T>::create_ymono_polygon(FwIter&& first, FwIter&& last)
  * @param pointset
  * @return polygon<T>
  */
+template <typename FwIter>
+inline void create_xmono_polygon(FwIter&& first, FwIter&& last)
+{
+    auto left = [](const auto& a, const auto& b) {
+        return std::tie(a.y(), a.x()) < std::tie(b.y(), b.x());
+    };
+    auto right = [](const auto& a, const auto& b) {
+        return std::tie(a.y(), a.x()) > std::tie(b.y(), b.x());
+    };
+    auto rightmost_pt = *std::max_element(first, last, left);
+    auto leftmost_pt = *std::min_element(first, last, left);
+    auto d = rightmost_pt - leftmost_pt;
+    auto up_down = [&](const auto& a) {
+        return d.y() * (a.x() - leftmost_pt.x()) <
+            d.x() * (a.y() - leftmost_pt.y());
+    };
+    auto middle = std::partition(first, last, std::move(up_down));
+    std::sort(first, middle, std::move(left));
+    std::sort(middle, last, std::move(right));
+}
+
 // template <typename T>
 // template <typename FwIter>
 // void polygon<T>::create_test_polygon(FwIter&& first, FwIter&& last)

@@ -3,7 +3,8 @@
 using namespace recti;
 
 template <typename Obj>
-auto test_recti(Obj& obj) {
+auto test_recti(Obj& obj)
+{
     auto obj2 = obj;
     assert(obj2 == obj);
     auto obj3 = obj2.flip().flip();

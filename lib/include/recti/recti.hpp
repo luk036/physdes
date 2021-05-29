@@ -2,7 +2,7 @@
 
 #include <boost/operators.hpp>
 #include <cassert>
-#include <tuple> // import std::tie()
+#include <tuple>   // import std::tie()
 #include <utility> // import std::move
 
 namespace recti
@@ -153,77 +153,6 @@ class vector2
 };
 
 
-// /**
-//  * @brief
-//  *
-//  * @tparam T
-//  * @param lhs
-//  * @param rhs
-//  * @return constexpr vector2<T>
-//  */
-// template <class T>
-// constexpr vector2<T> operator+(vector2<T> lhs, const vector2<T>& rhs)
-// {
-//     return lhs += rhs;
-// }
-
-// /**
-//  * @brief
-//  *
-//  * @tparam T
-//  * @param lhs
-//  * @param rhs
-//  * @return constexpr vector2<T>
-//  */
-// template <class T>
-// constexpr vector2<T> operator-(vector2<T> lhs, const vector2<T>& rhs)
-// {
-//     return lhs -= rhs;
-// }
-
-// /**
-//  * @brief
-//  *
-//  * @tparam T
-//  * @param lhs
-//  * @param rhs
-//  * @return constexpr vector2<T>
-//  */
-// template <class T>
-// constexpr vector2<T> operator*(vector2<T> lhs, const T& rhs)
-// {
-//     return lhs *= rhs;
-// }
-
-// /**
-//  * @brief
-//  *
-//  * @tparam T
-//  * @param lhs
-//  * @param rhs
-//  * @return constexpr vector2<T>
-//  */
-// template <class T>
-// constexpr vector2<T> operator*(const T& lhs, vector2<T> rhs)
-// {
-//     return rhs *= lhs;
-// }
-
-// /**
-//  * @brief
-//  *
-//  * @tparam T
-//  * @param lhs
-//  * @param rhs
-//  * @return constexpr vector2<T>
-//  */
-// template <class T>
-// constexpr vector2<T> operator/(vector2<T> lhs, const T& rhs)
-// {
-//     return lhs /= rhs;
-// }
-
-
 /**
  * @brief 2D point
  *
@@ -233,7 +162,7 @@ class vector2
 #pragma pack(push, 1)
 template <typename T1, typename T2 = T1>
 class point : boost::totally_ordered<point<T1, T2>,
-                boost::additive2<point<T1, T2>, vector2<T1>>>
+                  boost::additive2<point<T1, T2>, vector2<T1>>>
 {
   protected:
     T1 _x; //!< x coordinate
@@ -311,6 +240,12 @@ class point : boost::totally_ordered<point<T1, T2>,
         return *this;
     }
 
+    /**
+     * @brief 
+     * 
+     * @param rhs 
+     * @return vector2<T1> 
+     */
     constexpr auto operator-(const point& rhs) const -> vector2<T1>
     {
         return {this->x() - rhs.x(), this->y() - rhs.y()};
@@ -331,50 +266,6 @@ class point : boost::totally_ordered<point<T1, T2>,
         return std::tie(this->x(), this->y()) < std::tie(rhs.x(), rhs.y());
     }
 
-    // /**
-    //  * @brief
-    //  *
-    //  * @tparam U1
-    //  * @tparam U2
-    //  * @param rhs
-    //  * @return true
-    //  * @return false
-    //  */
-    // template <typename U1, typename U2>
-    // constexpr bool operator>(const point<U1, U2>& rhs) const
-    // {
-    //     return std::tie(this->x(), this->y()) > std::tie(rhs.x(), rhs.y());
-    // }
-
-    // /**
-    //  * @brief
-    //  *
-    //  * @tparam U1
-    //  * @tparam U2
-    //  * @param rhs
-    //  * @return true
-    //  * @return false
-    //  */
-    // template <typename U1, typename U2>
-    // constexpr bool operator<=(const point<U1, U2>& rhs) const
-    // {
-    //     return std::tie(this->x(), this->y()) <= std::tie(rhs.x(), rhs.y());
-    // }
-
-    // /**
-    //  * @brief
-    //  *
-    //  * @tparam U1
-    //  * @tparam U2
-    //  * @param rhs
-    //  * @return true
-    //  * @return false
-    //  */
-    // template <typename U1, typename U2>
-    // constexpr bool operator>=(const point<U1, U2>& rhs) const
-    // {
-    //     return std::tie(this->x(), this->y()) >= std::tie(rhs.x(), rhs.y());
-    // }
 
     /**
      * @brief
@@ -390,21 +281,6 @@ class point : boost::totally_ordered<point<T1, T2>,
     {
         return std::tie(this->x(), this->y()) == std::tie(rhs.x(), rhs.y());
     }
-
-    // /**
-    //  * @brief
-    //  *
-    //  * @tparam U1
-    //  * @tparam U2
-    //  * @param rhs
-    //  * @return true
-    //  * @return false
-    //  */
-    // template <typename U1, typename U2>
-    // constexpr bool operator!=(const point<U1, U2>& rhs) const
-    // {
-    //     return !(*this == rhs);
-    // }
 
     /**
      * @brief
@@ -470,10 +346,42 @@ class dualpoint : public point<T1, T2>
 
 
 /**
+ * @brief adapter for containers of point
+ * 
+ * @tparam iter 
+ */
+template <typename iterator>
+class dual_iterator : public iterator
+{
+    using value_type = typename iterator::value_type;
+    using T1 = decltype(std::declval(iterator::value_type).x());
+    using T2 = decltype(std::declval(iterator::value_type).y());
+
+    constexpr dual_iterator(iterator&& a)
+        : iterator{std::forward<iterator>(a)}
+    {
+    }
+
+    constexpr auto operator*() const noexcept -> const dualpoint<T2, T1>&
+    {
+        return dualpoint<T2, T1>{};
+        // return std::reinterpret_cast<const dualpoint<T2, T1>&>(*iterator::operator*());
+    }
+
+    constexpr auto operator*() noexcept -> dualpoint<T2, T1>&
+    {
+        return dualpoint<T2, T1>{};
+        // return std::reinterpret_cast<dualpoint<T2, T1>&>(*iterator::operator*());
+    }
+};
+
+
+/**
  * @brief Interval
  *
  * @tparam T
  */
+#pragma pack(push, 1)
 template <typename T = int>
 class interval : boost::totally_ordered<interval<T>>
 {
@@ -588,14 +496,17 @@ class interval : boost::totally_ordered<interval<T>>
         return !(a < this->lower() || this->upper() < a);
     }
 };
+#pragma pack(pop)
 
 
 /**
  * @brief Rectangle (Rectilinear)
  *
  * @tparam T
- * @todo use "__attribute__((aligned(0)))" to align struct 'rectangle<int>' to 0 bytes
+ * @todo use "__attribute__((aligned(0)))" to align struct 'rectangle<int>' to 0
+ * bytes
  */
+#pragma pack(push, 1)
 template <typename T>
 struct rectangle : point<interval<T>>
 {
@@ -629,7 +540,8 @@ struct rectangle : point<interval<T>>
      * @return false
      */
     template <typename U1, typename U2>
-    [[nodiscard]] constexpr auto contains(const point<U1, U2>& rhs) const -> bool
+    [[nodiscard]] constexpr auto contains(const point<U1, U2>& rhs) const
+        -> bool
     {
         return this->x().contains(rhs.x()) && this->y().contains(rhs.y());
     }
@@ -680,6 +592,7 @@ struct rectangle : point<interval<T>>
         return out;
     }
 };
+#pragma pack(pop)
 
 
 /**

@@ -20,7 +20,6 @@ class rpolygon
     std::vector<vector2<T>> _vecs; // @todo: add custom allocator support
 
   public:
-
     /**
      * @brief Construct a new rpolygon object
      *
@@ -47,6 +46,11 @@ class rpolygon
         return *this;
     }
 
+    /**
+     * @brief
+     *
+     * @return T
+     */
     constexpr auto signed_area() const -> T
     {
         auto&& vecs = this->_vecs;
@@ -57,7 +61,6 @@ class rpolygon
         }
         return res;
     }
-
 
     /**
      * @brief Create a ymono rpolygon object
@@ -104,13 +107,6 @@ class rpolygon
      * @return rpolygon<T>
      */
     static auto create_regular(std::vector<point<T>> pointset) -> rpolygon<T>;
-
-    /**
-     * @brief area
-     *
-     * @return auto
-     */
-    [[nodiscard]] auto area() const -> T;
 
     /**
      * @brief
@@ -171,23 +167,28 @@ namespace recti
  * @param pointset
  * @return rpolygon<T>
  */
-template <typename T>
 template <typename FwIter>
-void rpolygon<T>::create_ymono_rpolygon(FwIter&& first, FwIter&& last)
+inline void create_ymono_rpolygon(FwIter&& first, FwIter&& last)
 {
     auto upward = [](const auto& a, const auto& b) {
-        return std::tie(a.y(), a.x()) < std::tie(b.y(), b.x()); };
+        return std::tie(a.y(), a.x()) < std::tie(b.y(), b.x());
+    };
     auto downward = [](const auto& a, const auto& b) {
-        return std::tie(a.y(), a.x()) > std::tie(b.y(), b.x()); };
+        return std::tie(a.y(), a.x()) > std::tie(b.y(), b.x());
+    };
     auto [min, max] = std::minmax_element(first, last, upward);
     auto min_pt = *min;
     auto d = *max - min_pt;
     auto l2r = [&](const auto& a) {
-        return d.x()*(a.y() - min_pt.y()) > (a.x() - min_pt.x())*d.y(); };
+        return d.x() * (a.y() - min_pt.y()) > 
+            (a.x() - min_pt.x()) * d.y();
+    };
     auto r2l = [&](const auto& a) {
-        return d.x()*(a.y() - min_pt.y()) < (a.x() - min_pt.x())*d.y(); };
-    auto middle = (d.x() < 0)? std::partition(first, last, std::move(l2r))
-        : std::partition(first, last, std::move(r2l));
+        return d.x() * (a.y() - min_pt.y()) <
+            (a.x() - min_pt.x()) * d.y();
+    };
+    auto middle = (d.x() < 0) ? std::partition(first, last, std::move(l2r))
+                              : std::partition(first, last, std::move(r2l));
     std::sort(first, middle, std::move(upward));
     std::sort(middle, last, std::move(downward));
 }
@@ -201,9 +202,8 @@ void rpolygon<T>::create_ymono_rpolygon(FwIter&& first, FwIter&& last)
  * @param first
  * @param last
  */
-template <typename T>
 template <typename FwIter>
-void rpolygon<T>::create_test_rpolygon(FwIter&& first, FwIter&& last)
+inline void create_test_rpolygon(FwIter&& first, FwIter&& last)
 {
     auto up = [](const auto& a, const auto& b) {
         return std::tie(a.y(), a.x()) < std::tie(b.y(), b.x());
@@ -386,29 +386,29 @@ auto rpolygon<T>::create_ymonotone(std::vector<point<T>>&& pointset)
 //     return {std::move(pointset)};
 // }
 
-/**
- * @brief area
- *
- * @tparam T
- * @return T
- */
-template <typename T>
-auto rpolygon<T>::area() const -> T
-{
-    auto it = this->begin();
-    assert(it != this->end());
+// /**
+//  * @brief area
+//  *
+//  * @tparam T
+//  * @return T
+//  */
+// template <typename T>
+// auto rpolygon<T>::area() const -> T
+// {
+//     auto it = this->begin();
+//     assert(it != this->end());
 
-    auto x0 = it->x();
-    auto yi = it->y();
-    ++it;
+//     auto x0 = it->x();
+//     auto yi = it->y();
+//     ++it;
 
-    auto sum = T {};
-    for (; it != this->end(); ++it)
-    {
-        sum += (it->y() - yi) * (it->x() - x0), yi = it->y();
-    }
-    return sum;
-}
+//     auto sum = T {};
+//     for (; it != this->end(); ++it)
+//     {
+//         sum += (it->y() - yi) * (it->x() - x0), yi = it->y();
+//     }
+//     return sum;
+// }
 
 
 } // namespace recti
