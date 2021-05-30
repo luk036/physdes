@@ -118,10 +118,11 @@ namespace recti
 {
 
 /**
- * @brief
+ * @brief Create a ymono polygon object
  *
- * @tparam T
- * @param pointset
+ * @tparam FwIter
+ * @param first
+ * @param last
  */
 template <typename FwIter>
 inline void create_ymono_polygon(FwIter&& first, FwIter&& last)
@@ -132,59 +133,33 @@ inline void create_ymono_polygon(FwIter&& first, FwIter&& last)
     auto down = [](const auto& a, const auto& b) {
         return std::tie(a.y(), a.x()) > std::tie(b.y(), b.x());
     };
-    auto topmost_pt = *std::max_element(first, last, up);
-    auto bottommost_pt = *std::min_element(first, last, up);
-    auto d = topmost_pt - bottommost_pt;
-    auto right_left = [&](const auto& a) {
-        return d.x() * (a.y() - bottommost_pt.y()) <
-            d.y() * (a.x() - bottommost_pt.x());
-    };
-    auto middle = std::partition(first, last, std::move(right_left));
+    auto topmost = *std::max_element(first, last, up);
+    auto botmost = *std::min_element(first, last, up);
+    auto d = topmost - botmost;
+    auto r2l = [&](const auto& a) { return d.cross(a - botmost) <= 0; };
+    auto middle = std::partition(first, last, std::move(r2l));
     std::sort(first, middle, std::move(up));
     std::sort(middle, last, std::move(down));
 }
 
 
-// /**
-//  * @brief
-//  *
-//  * @tparam T
-//  * @param pointset
-//  */
-// template <typename FwIter>
-// inline void create_xmono_polygon(FwIter&& first, FwIter&& last)
-// {
-//     auto du_first = dual_iterator<FwIter>(first);
-//     auto du_last = dual_iterator<FwIter>(last);
-//     return create_ymono_polygon(du_first, du_last);
-// }
-
 /**
- * @brief
+ * @brief Create a xmono polygon object
  *
- * @tparam T
- * @param pointset
- * @return polygon<T>
+ * @tparam FwIter
+ * @param first
+ * @param last
  */
 template <typename FwIter>
 inline void create_xmono_polygon(FwIter&& first, FwIter&& last)
 {
-    auto left = [](const auto& a, const auto& b) {
-        return std::tie(a.y(), a.x()) < std::tie(b.y(), b.x());
-    };
-    auto right = [](const auto& a, const auto& b) {
-        return std::tie(a.y(), a.x()) > std::tie(b.y(), b.x());
-    };
-    auto rightmost_pt = *std::max_element(first, last, left);
-    auto leftmost_pt = *std::min_element(first, last, left);
-    auto d = rightmost_pt - leftmost_pt;
-    auto up_down = [&](const auto& a) {
-        return d.y() * (a.x() - leftmost_pt.x()) <
-            d.x() * (a.y() - leftmost_pt.y());
-    };
-    auto middle = std::partition(first, last, std::move(up_down));
-    std::sort(first, middle, std::move(left));
-    std::sort(middle, last, std::move(right));
+    const auto leftmost = *std::min_element(first, last);
+    const auto rightmost = *std::max_element(first, last);
+    const auto d = rightmost - leftmost;
+    auto r2l = [&](const auto& a) { return d.cross(a - leftmost) <= 0; };
+    const auto middle = std::partition(first, last, std::move(r2l));
+    std::sort(first, middle);
+    std::sort(middle, last, std::greater<>());
 }
 
 // template <typename T>

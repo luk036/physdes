@@ -241,10 +241,10 @@ class point : boost::totally_ordered<point<T1, T2>,
     }
 
     /**
-     * @brief 
-     * 
-     * @param rhs 
-     * @return vector2<T1> 
+     * @brief
+     *
+     * @param rhs
+     * @return vector2<T1>
      */
     constexpr auto operator-(const point& rhs) const -> vector2<T1>
     {
@@ -347,8 +347,8 @@ class dualpoint : public point<T1, T2>
 
 /**
  * @brief adapter for containers of point
- * 
- * @tparam iter 
+ *
+ * @tparam iter
  */
 template <typename iterator>
 class dual_iterator : public iterator
@@ -358,20 +358,22 @@ class dual_iterator : public iterator
     using T2 = decltype(std::declval(iterator::value_type).y());
 
     constexpr dual_iterator(iterator&& a)
-        : iterator{std::forward<iterator>(a)}
+        : iterator {std::forward<iterator>(a)}
     {
     }
 
     constexpr auto operator*() const noexcept -> const dualpoint<T2, T1>&
     {
-        return dualpoint<T2, T1>{};
-        // return std::reinterpret_cast<const dualpoint<T2, T1>&>(*iterator::operator*());
+        return dualpoint<T2, T1> {};
+        // return std::reinterpret_cast<const dualpoint<T2,
+        // T1>&>(*iterator::operator*());
     }
 
     constexpr auto operator*() noexcept -> dualpoint<T2, T1>&
     {
-        return dualpoint<T2, T1>{};
-        // return std::reinterpret_cast<dualpoint<T2, T1>&>(*iterator::operator*());
+        return dualpoint<T2, T1> {};
+        // return std::reinterpret_cast<dualpoint<T2,
+        // T1>&>(*iterator::operator*());
     }
 };
 
