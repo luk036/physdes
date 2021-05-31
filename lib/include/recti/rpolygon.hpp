@@ -53,6 +53,8 @@ class rpolygon
      */
     constexpr auto signed_area() const -> T
     {
+        assert(this->_vecs.size() >= 1);
+
         auto&& vecs = this->_vecs;
         auto res = vecs[0].x() * vecs[0].y();
         for (auto i = 1U; i != vecs.size(); ++i)
@@ -126,12 +128,14 @@ namespace recti
 template <typename FwIter>
 inline auto create_xmono_rpolygon(FwIter&& first, FwIter&& last) -> bool
 {
-    auto leftmost = *std::min_element(first, last);
-    auto rightmost = *std::max_element(first, last);
-    auto is_anticlockwise = rightmost.y() <= leftmost.y();
+    assert(first != last);
+
+    const auto leftmost = *std::min_element(first, last);
+    const auto rightmost = *std::max_element(first, last);
+    const auto is_anticlockwise = rightmost.y() <= leftmost.y();
     auto r2l = [&](const auto& a) { return a.y() <= leftmost.y(); };
-    auto l2r = [&](const auto& a) { return a.y() > leftmost.y(); };
-    auto middle = is_anticlockwise
+    auto l2r = [&](const auto& a) { return a.y() >= leftmost.y(); };
+    const auto middle = is_anticlockwise
         ? std::partition(first, last, std::move(r2l))
         : std::partition(first, last, std::move(l2r));
     std::sort(first, middle);
@@ -151,18 +155,20 @@ inline auto create_xmono_rpolygon(FwIter&& first, FwIter&& last) -> bool
 template <typename FwIter>
 inline auto create_ymono_rpolygon(FwIter&& first, FwIter&& last) -> bool
 {
+    assert(first != last);
+
     auto upward = [](const auto& a, const auto& b) {
         return std::tie(a.y(), a.x()) < std::tie(b.y(), b.x());
     };
     auto downward = [](const auto& a, const auto& b) {
         return std::tie(a.y(), a.x()) > std::tie(b.y(), b.x());
     };
-    auto botmost = *std::min_element(first, last, upward);
-    auto topmost = *std::max_element(first, last, upward);
-    auto is_anticlockwise = topmost.x() >= botmost.x();
+    const auto botmost = *std::min_element(first, last, upward);
+    const auto topmost = *std::max_element(first, last, upward);
+    const auto is_anticlockwise = topmost.x() >= botmost.x();
     auto r2l = [&](const auto& a) { return a.x() >= botmost.x(); };
-    auto l2r = [&](const auto& a) { return a.x() < botmost.x(); };
-    auto middle = is_anticlockwise
+    auto l2r = [&](const auto& a) { return a.x() <= botmost.x(); };
+    const auto middle = is_anticlockwise
         ? std::partition(first, last, std::move(r2l))
         : std::partition(first, last, std::move(l2r));
     std::sort(first, middle, std::move(upward));
@@ -182,6 +188,8 @@ inline auto create_ymono_rpolygon(FwIter&& first, FwIter&& last) -> bool
 template <typename FwIter>
 inline void create_test_rpolygon(FwIter&& first, FwIter&& last)
 {
+    assert(first != last);
+
     auto up = [](const auto& a, const auto& b) {
         return std::tie(a.y(), a.x()) < std::tie(b.y(), b.x());
     };
@@ -227,39 +235,24 @@ inline void create_test_rpolygon(FwIter&& first, FwIter&& last)
     }
 }
 
-/**
- * @brief
- *
- * @tparam T
- * @param pointset
- * @return rpolygon<T>
- */
-template <typename FwIter>
-static void create_xmonotone_i(FwIter&& first, FwIter&& last)
+template <typename T>
+inline bool point_in_rpolygon(const std::vector<point<T>>& S, const point<T>& q)
 {
-    auto l2r = [](const auto& a, const auto& b) { return a.x() < b.x(); };
-    auto r2l = [](const auto& a, const auto& b) { return b.x() < a.x(); };
-    auto [min, max] = std::minmax_element(first, last, l2r);
-    auto pivot = max->y();
-
-    // using Fn = std::function<bool(const point<int>&)>;
-    // Fn downup = [&pivot](const auto& a) { return a.y() < pivot; };
-    // Fn updown = [&pivot](const auto& a) { return pivot < a.y(); };
-    // auto middle =
-    //     std::partition(first, last, (min->y() < pivot) ? downup : updown);
-    FwIter middle;
-    if (min->y() < pivot)
+    auto c = false;
+    auto p0 = S.back();
+    for (auto&& p1 : S)
     {
-        middle = std::partition(
-            first, last, [&pivot](const auto& a) { return a.y() < pivot; });
+        if ((p1.y() <= q.y() && q.y() < p0.y()) ||
+            (p0.y() <= q.y() && q.y() < p1.y()))
+        {
+            if (p1.x() > q.x())
+            {
+                c = !c;
+            }
+        }
+        p0 = p1;
     }
-    else
-    {
-        middle = std::partition(
-            first, last, [&pivot](const auto& a) { return pivot < a.y(); });
-    }
-    std::sort(first, middle, std::move(l2r));
-    std::sort(middle, last, std::move(r2l));
+    return c;
 }
 
 } // namespace recti

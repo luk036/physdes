@@ -6,7 +6,7 @@
 // using std::randint;
 using namespace recti;
 
-TEST_CASE("Rectilinear Polygon test")
+TEST_CASE("Rectilinear Polygon test (y-mono)")
 {
     auto S = std::vector<point<int>> {{-2, 2}, {0, -1}, {-5, 1}, {-2, 4},
         {0, -4}, {-4, 3}, {-6, -2}, {5, 1}, {2, 2}, {3, -3}, {-3, -4}, {1, 4}};
@@ -14,10 +14,11 @@ TEST_CASE("Rectilinear Polygon test")
     auto P = rpolygon<int>(S);
     CHECK(is_anticlockwise);
     CHECK(P.signed_area() == 45);
+    CHECK(!point_in_rpolygon(S, point {4, 5}));
 }
 
 
-TEST_CASE("Rectilinear Polygon test (x-monoton)")
+TEST_CASE("Rectilinear Polygon test (x-mono)")
 {
     auto S = std::vector<point<int>> {{-2, 2}, {0, -1}, {-5, 1}, {-2, 4},
         {0, -4}, {-4, 3}, {-6, -2}, {5, 1}, {2, 2}, {3, -3}, {-3, -4}, {1, 4}};

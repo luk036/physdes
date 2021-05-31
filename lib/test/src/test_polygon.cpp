@@ -14,6 +14,7 @@ TEST_CASE("Polygon test (y-mono)")
     create_ymono_polygon(S.begin(), S.end());
     auto P = polygon<int>(S);
     CHECK(P.signed_area_x2() == 102);
+    CHECK(!point_in_polygon(S, point {4, 5}));
 }
 
 // 106980095362

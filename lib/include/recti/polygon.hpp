@@ -55,6 +55,7 @@ class polygon
     {
         auto&& vs = this->_vecs;
         auto n = this->_vecs.size();
+        assert(n >= 2);
         auto res = vs[0].x() * vs[1].y() - vs[n - 1].x() * vs[n - 2].y();
         for (auto i = 1U; i != n - 1; ++i)
         {
@@ -127,6 +128,8 @@ namespace recti
 template <typename FwIter>
 inline void create_ymono_polygon(FwIter&& first, FwIter&& last)
 {
+    assert(first != last);
+
     auto up = [](const auto& a, const auto& b) {
         return std::tie(a.y(), a.x()) < std::tie(b.y(), b.x());
     };
@@ -153,6 +156,8 @@ inline void create_ymono_polygon(FwIter&& first, FwIter&& last)
 template <typename FwIter>
 inline void create_xmono_polygon(FwIter&& first, FwIter&& last)
 {
+    assert(first != last);
+
     const auto leftmost = *std::min_element(first, last);
     const auto rightmost = *std::max_element(first, last);
     const auto d = rightmost - leftmost;
@@ -162,53 +167,37 @@ inline void create_xmono_polygon(FwIter&& first, FwIter&& last)
     std::sort(middle, last, std::greater<>());
 }
 
-// template <typename T>
-// template <typename FwIter>
-// void polygon<T>::create_test_polygon(FwIter&& first, FwIter&& last)
-// {
-//     auto up = [](const auto& a, const auto& b) {
-//         return std::tie(a.y(), a.x()) < std::tie(b.y(), b.x());
-//     };
-//     auto down = [](const auto& a, const auto& b) {
-//         return std::tie(a.y(), a.x()) > std::tie(b.y(), b.x());
-//     };
-//     auto left = [](const auto& a, const auto& b) {
-//         return std::tie(a.x(), a.y()) < std::tie(b.x(), b.y());
-//     };
-//     auto right = [](const auto& a, const auto& b) {
-//         return std::tie(a.x(), a.y()) > std::tie(b.x(), b.y());
-//     };
 
-//     auto min_pt = *std::min_element(first, last, up);
-//     auto max_pt = *std::max_element(first, last, up);
-//     auto dx = max_pt.x() - min_pt.x();
-//     auto dy = max_pt.y() - min_pt.y();
-//     auto middle = std::partition(first, last, [&](const auto& a) {
-//         return dx * (a.y() - min_pt.y()) < (a.x() - min_pt.x()) * dy;
-//     });
+template <typename T>
+inline bool point_in_polygon(const std::vector<point<T>>& S, point<T>&& q)
+{
+    auto c = false;
+    auto p0 = S.back();
+    for (auto&& p1 : S)
+    {
+        if ((p1.y() <= q.y() && q.y() < p0.y()) ||
+            (p0.y() <= q.y() && q.y() < p1.y()))
+        {
+            auto d = (q - p0).cross(p1 - p0);
+            if (p1.y() > p0.y())
+            {
+                if (d < 0)
+                {
+                    c = !c;
+                }
+            }
+            else
+            { // v1.y() < v0.y()
+                if (d > 0)
+                {
+                    c = !c;
+                }
+            }
+        }
+        p0 = p1;
+    }
+    return c;
+}
 
-//     auto max_pt1 = *std::max_element(first, middle, left);
-//     auto middle2 = std::partition(
-//         first, middle, [&](const auto& a) { return a.y() < max_pt1.y(); });
-
-//     auto min_pt2 = *std::min_element(middle, last, left);
-//     auto middle3 = std::partition(
-//         middle, last, [&](const auto& a) { return a.y() > min_pt2.y(); });
-
-//     if (dx < 0) // clockwise
-//     {
-//         std::sort(first, middle2, down);
-//         std::sort(middle2, middle, left);
-//         std::sort(middle, middle3, up);
-//         std::sort(middle3, last, right);
-//     }
-//     else // anti-clockwise
-//     {
-//         std::sort(first, middle2, left);
-//         std::sort(middle2, middle, up);
-//         std::sort(middle, middle3, right);
-//         std::sort(middle3, last, down);
-//     }
-// }
 
 } // namespace recti
