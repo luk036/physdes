@@ -55,11 +55,11 @@ class rpolygon
     {
         assert(this->_vecs.size() >= 1);
 
-        auto&& vecs = this->_vecs;
-        auto res = vecs[0].x() * vecs[0].y();
-        for (auto i = 1U; i != vecs.size(); ++i)
+        auto it = this->_vecs.begin();
+        auto res = it->x() * it->y();
+        for (++it; it != this->_vecs.end(); ++it)
         {
-            res += vecs[i].x() * (vecs[i].y() - vecs[i - 1].y());
+            res += it->x() * (it->y() - std::prev(it)->y());
         }
         return res;
     }

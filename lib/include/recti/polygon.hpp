@@ -125,26 +125,21 @@ namespace recti
  * @param first
  * @param last
  */
-template <typename FwIter>
-inline void create_ymono_polygon(FwIter&& first, FwIter&& last)
+template <typename FwIter, typename Compare>
+inline void create_mono_polygon(FwIter&& first, FwIter&& last, Compare&& dir)
 {
     assert(first != last);
 
-    auto up = [](const auto& a, const auto& b) {
-        return std::tie(a.y(), a.x()) < std::tie(b.y(), b.x());
-    };
-    auto down = [](const auto& a, const auto& b) {
-        return std::tie(a.y(), a.x()) > std::tie(b.y(), b.x());
-    };
-    auto topmost = *std::max_element(first, last, up);
-    auto botmost = *std::min_element(first, last, up);
-    auto d = topmost - botmost;
-    auto r2l = [&](const auto& a) { return d.cross(a - botmost) <= 0; };
-    auto middle = std::partition(first, last, std::move(r2l));
-    std::sort(first, middle, std::move(up));
-    std::sort(middle, last, std::move(down));
+    auto max_pt = *std::max_element(first, last, dir);
+    auto min_pt = *std::min_element(first, last, dir);
+    auto d = max_pt - min_pt;
+    auto middle = std::partition(first, last, [&](const auto& a) {
+        return d.cross(a - min_pt) <= 0; 
+    });
+    std::sort(first, middle, dir);
+    std::sort(middle, last, std::move(dir));
+    std::reverse(middle, last);
 }
-
 
 /**
  * @brief Create a xmono polygon object
@@ -156,16 +151,34 @@ inline void create_ymono_polygon(FwIter&& first, FwIter&& last)
 template <typename FwIter>
 inline void create_xmono_polygon(FwIter&& first, FwIter&& last)
 {
-    assert(first != last);
-
-    const auto leftmost = *std::min_element(first, last);
-    const auto rightmost = *std::max_element(first, last);
-    const auto d = rightmost - leftmost;
-    auto r2l = [&](const auto& a) { return d.cross(a - leftmost) <= 0; };
-    const auto middle = std::partition(first, last, std::move(r2l));
-    std::sort(first, middle);
-    std::sort(middle, last, std::greater<>());
+    return create_mono_polygon(first, last, std::less<>());
 }
+
+/**
+ * @brief Create a ymono polygon object
+ *
+ * @tparam FwIter
+ * @param first
+ * @param last
+ */
+template <typename FwIter>
+inline void create_ymono_polygon(FwIter&& first, FwIter&& last)
+{
+    return create_mono_polygon(first, last, [](const auto& a, const auto& b) {
+        return std::tie(a.y(), a.x()) < std::tie(b.y(), b.x());
+    });
+}
+
+//     assert(first != last);
+
+//     const auto leftmost = *std::min_element(first, last);
+//     const auto rightmost = *std::max_element(first, last);
+//     const auto d = rightmost - leftmost;
+//     auto r2l = [&](const auto& a) { return d.cross(a - leftmost) <= 0; };
+//     const auto middle = std::partition(first, last, std::move(r2l));
+//     std::sort(first, middle);
+//     std::sort(middle, last, std::greater<>());
+// }
 
 
 template <typename T>
