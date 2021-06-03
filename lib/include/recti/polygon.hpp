@@ -182,7 +182,7 @@ inline void create_ymono_polygon(FwIter&& first, FwIter&& last)
  * @return false
  */
 template <typename T>
-inline bool point_in_polygon(const std::vector<point<T>>& S, point<T>&& q)
+inline bool point_in_polygon(const std::vector<point<T>>& S, const point<T>& q)
 {
     auto c = false;
     auto p0 = S.back();

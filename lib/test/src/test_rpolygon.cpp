@@ -1,4 +1,6 @@
 #include <doctest/doctest.h>
+#include <fmt/core.h>
+#include <recti/halton_int.hpp>
 #include <recti/recti.hpp>
 #include <recti/rpolygon.hpp>
 #include <vector>
@@ -27,3 +29,21 @@ TEST_CASE("Rectilinear Polygon test (x-mono)")
     CHECK(!is_anticlockwise);
     CHECK(P.signed_area() == -53);
 }
+
+
+TEST_CASE("Rectilinear Polygon test (y-mono 50)")
+{
+    auto hgenX = vdcorput(3, 7);
+    auto hgenY = vdcorput(2, 11);
+    auto S = std::vector<point<int>>{};
+    for (auto i = 0U; i != 50; ++i)
+    {
+        S.emplace_back(point<int>(hgenX(), hgenY()));
+    }
+    auto is_anticlockwise = create_ymono_rpolygon(S.begin(), S.end());
+    auto P = rpolygon<int>(S);
+    CHECK(is_anticlockwise);
+    CHECK(P.signed_area() == 45);
+    CHECK(!point_in_rpolygon(S, point {4, 5}));
+}
+
