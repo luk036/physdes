@@ -3,6 +3,7 @@
 // #include <boost/operators.hpp>
 #include "recti.hpp"
 #include <vector>
+#include <algorithm>
 
 namespace recti
 {
@@ -109,14 +110,6 @@ auto operator<<(Stream& out, const polygon<T>& r) -> Stream&
     return out;
 }
 
-} // namespace recti
-
-#include <algorithm>
-#include <functional>
-#include <numeric> // import accumulate
-
-namespace recti
-{
 
 /**
  * @brief Create a ymono polygon object
@@ -133,11 +126,10 @@ inline void create_mono_polygon(FwIter&& first, FwIter&& last, Compare&& dir)
     auto max_pt = *std::max_element(first, last, dir);
     auto min_pt = *std::min_element(first, last, dir);
     auto d = max_pt - min_pt;
-    auto middle = std::partition(first, last, [&](const auto& a) {
-        return d.cross(a - min_pt) <= 0; 
-    });
+    auto middle = std::partition(
+        first, last, [&](const auto& a) { return d.cross(a - min_pt) <= 0; });
     std::sort(first, middle, dir);
-    std::sort(middle, last, std::move(dir));
+    std::sort(middle, last, dir);
     std::reverse(middle, last);
 }
 
@@ -169,18 +161,26 @@ inline void create_ymono_polygon(FwIter&& first, FwIter&& last)
     });
 }
 
-//     assert(first != last);
 
-//     const auto leftmost = *std::min_element(first, last);
-//     const auto rightmost = *std::max_element(first, last);
-//     const auto d = rightmost - leftmost;
-//     auto r2l = [&](const auto& a) { return d.cross(a - leftmost) <= 0; };
-//     const auto middle = std::partition(first, last, std::move(r2l));
-//     std::sort(first, middle);
-//     std::sort(middle, last, std::greater<>());
-// }
-
-
+/**
+ * @brief determine if a point is within a polygon
+ *
+ * The code below is from Wm. Randolph Franklin <wrf@ecse.rpi.edu>
+ * (see URL below) with some minor modifications for integer. It returns
+ * true for strictly interior points, false for strictly exterior, and ub
+ * for points on the boundary.  The boundary behavior is complex but
+ * determined; in particular, for a partition of a region into polygons,
+ * each point is "in" exactly one polygon.
+ * (See p.243 of [O'Rourke (C)] for a discussion of boundary behavior.)
+ *
+ * See http://www.faqs.org/faqs/graphics/algorithms-faq/ Subject 2.03
+ *
+ * @tparam T
+ * @param S
+ * @param q
+ * @return true
+ * @return false
+ */
 template <typename T>
 inline bool point_in_polygon(const std::vector<point<T>>& S, point<T>&& q)
 {

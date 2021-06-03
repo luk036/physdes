@@ -1,8 +1,8 @@
 #pragma once
 
-// #include <boost/operators.hpp>
 #include "recti.hpp"
 #include <vector>
+#include <algorithm>
 
 namespace recti
 {
@@ -90,31 +90,6 @@ class rpolygon
     [[nodiscard]] auto upper() const -> point<T>;
 };
 
-/**
- * @brief
- *
- * @tparam Stream
- * @tparam T
- * @param out
- * @param r
- * @return Stream&
- */
-template <class Stream, typename T>
-auto operator<<(Stream& out, const rpolygon<T>& r) -> Stream&
-{
-    for (auto&& p : r)
-    {
-        out << "  \\draw " << p << ";\n";
-    }
-    return out;
-}
-
-} // namespace recti
-
-#include <algorithm>
-
-namespace recti
-{
 
 /**
  * @brief Create a xmono rpolygon object
@@ -235,6 +210,25 @@ inline void create_test_rpolygon(FwIter&& first, FwIter&& last)
     }
 }
 
+/**
+ * @brief determine if a point is within a polygon
+ *
+ * The code below is from Wm. Randolph Franklin <wrf@ecse.rpi.edu>
+ * (see URL below) with some minor modifications for rectilinear. It returns
+ * true for strictly interior points, false for strictly exterior, and ub
+ * for points on the boundary.  The boundary behavior is complex but
+ * determined; in particular, for a partition of a region into polygons,
+ * each point is "in" exactly one polygon.
+ * (See p.243 of [O'Rourke (C)] for a discussion of boundary behavior.)
+ *
+ * See http://www.faqs.org/faqs/graphics/algorithms-faq/ Subject 2.03
+ *
+ * @tparam T
+ * @param S
+ * @param q
+ * @return true
+ * @return false
+ */
 template <typename T>
 inline bool point_in_rpolygon(const std::vector<point<T>>& S, const point<T>& q)
 {
