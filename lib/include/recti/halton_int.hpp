@@ -13,7 +13,7 @@ namespace recti
  * @param base
  * @return unsigned
  */
-inline constexpr auto vdc(unsigned k, unsigned base = 2, unsigned scale = 10) noexcept -> unsigned
+inline auto vdc(unsigned k, unsigned base = 2, unsigned scale = 10) noexcept -> unsigned
 {
     auto vdc = 0;
     auto factor = unsigned(std::pow(base, scale));
@@ -56,7 +56,7 @@ class vdcorput
      *
      * @return double
      */
-    constexpr auto operator()() noexcept -> unsigned
+    auto operator()() noexcept -> unsigned
     {
         this->_count += 1;
         return vdc(this->_count, this->_base, this->_scale);
