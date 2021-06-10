@@ -4,6 +4,7 @@
 #include "recti.hpp"
 #include <vector>
 #include <algorithm>
+#include <span>
 
 namespace recti
 {
@@ -26,7 +27,7 @@ class polygon
      *
      * @param pointset
      */
-    explicit constexpr polygon(const std::vector<point<T>>& pointset)
+    explicit constexpr polygon(std::span<const point<T>> pointset)
         : _origin {pointset[0]}
     {
         for (auto i = 1U; i != pointset.size(); ++i)
@@ -182,7 +183,7 @@ inline void create_ymono_polygon(FwIter&& first, FwIter&& last)
  * @return false
  */
 template <typename T>
-inline bool point_in_polygon(const std::vector<point<T>>& S, const point<T>& q)
+inline bool point_in_polygon(std::span<const point<T>> S, const point<T>& q)
 {
     auto c = false;
     auto p0 = S.back();

@@ -4,6 +4,7 @@
 #include <recti/recti.hpp>
 #include <recti/rpolygon.hpp>
 #include <vector>
+#include <cstdio>
 
 // using std::randint;
 using namespace recti;
@@ -16,7 +17,7 @@ TEST_CASE("Rectilinear Polygon test (y-mono)")
     auto P = rpolygon<int>(S);
     CHECK(is_anticlockwise);
     CHECK(P.signed_area() == 45);
-    CHECK(!point_in_rpolygon(S, point {4, 5}));
+    CHECK(!point_in_rpolygon<int>(S, point {4, 5}));
 }
 
 
@@ -63,6 +64,7 @@ TEST_CASE("Rectilinear Polygon test (y-mono 50)")
     auto P = rpolygon<int>(S);
     CHECK(!is_anticlockwise);
     CHECK(P.signed_area() == -2032128);
-    CHECK(!point_in_rpolygon(S, q));
+    CHECK(!point_in_rpolygon<int>(S, q));
+    puts("Hello world1\n");
 }
 
