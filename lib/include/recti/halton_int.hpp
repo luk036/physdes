@@ -13,7 +13,8 @@ namespace recti
  * @param base
  * @return unsigned
  */
-inline auto vdc(unsigned k, unsigned base = 2, unsigned scale = 10) noexcept -> unsigned
+inline auto vdc(unsigned k, unsigned base = 2, unsigned scale = 10) noexcept
+    -> unsigned
 {
     auto vdc = 0;
     auto factor = unsigned(std::pow(base, scale));
@@ -90,7 +91,8 @@ class halton
      *
      * @param base
      */
-    explicit constexpr halton(const unsigned base[], const unsigned scale[]) noexcept
+    explicit constexpr halton(
+        const unsigned base[], const unsigned scale[]) noexcept
         : _vdc0(base[0], scale[0])
         , _vdc1(base[1], scale[1])
     {

@@ -1,9 +1,9 @@
 #pragma once
 
 #include "recti.hpp"
-#include <vector>
 #include <algorithm>
 #include <span>
+#include <vector>
 
 namespace recti
 {
@@ -52,7 +52,7 @@ class rpolygon
      *
      * @return T
      */
-    constexpr auto signed_area() const -> T
+    [[nodiscard]] constexpr auto signed_area() const -> T
     {
         assert(this->_vecs.size() >= 1);
 
@@ -133,12 +133,10 @@ inline auto create_ymono_rpolygon(FwIter&& first, FwIter&& last) -> bool
 {
     assert(first != last);
 
-    auto upward = [](const auto& a, const auto& b) {
-        return std::tie(a.y(), a.x()) < std::tie(b.y(), b.x());
-    };
-    auto downward = [](const auto& a, const auto& b) {
-        return std::tie(a.y(), a.x()) > std::tie(b.y(), b.x());
-    };
+    auto upward = [](const auto& a, const auto& b)
+    { return std::tie(a.y(), a.x()) < std::tie(b.y(), b.x()); };
+    auto downward = [](const auto& a, const auto& b)
+    { return std::tie(a.y(), a.x()) > std::tie(b.y(), b.x()); };
     const auto botmost = *std::min_element(first, last, upward);
     const auto topmost = *std::max_element(first, last, upward);
     const auto is_anticlockwise = topmost.x() >= botmost.x();
@@ -166,26 +164,22 @@ inline void create_test_rpolygon(FwIter&& first, FwIter&& last)
 {
     assert(first != last);
 
-    auto up = [](const auto& a, const auto& b) {
-        return std::tie(a.y(), a.x()) < std::tie(b.y(), b.x());
-    };
-    auto down = [](const auto& a, const auto& b) {
-        return std::tie(a.y(), a.x()) > std::tie(b.y(), b.x());
-    };
-    auto left = [](const auto& a, const auto& b) {
-        return std::tie(a.x(), a.y()) < std::tie(b.x(), b.y());
-    };
-    auto right = [](const auto& a, const auto& b) {
-        return std::tie(a.x(), a.y()) > std::tie(b.x(), b.y());
-    };
+    auto up = [](const auto& a, const auto& b)
+    { return std::tie(a.y(), a.x()) < std::tie(b.y(), b.x()); };
+    auto down = [](const auto& a, const auto& b)
+    { return std::tie(a.y(), a.x()) > std::tie(b.y(), b.x()); };
+    auto left = [](const auto& a, const auto& b)
+    { return std::tie(a.x(), a.y()) < std::tie(b.x(), b.y()); };
+    auto right = [](const auto& a, const auto& b)
+    { return std::tie(a.x(), a.y()) > std::tie(b.x(), b.y()); };
 
     auto min_pt = *std::min_element(first, last, up);
     auto max_pt = *std::max_element(first, last, up);
     auto dx = max_pt.x() - min_pt.x();
     auto dy = max_pt.y() - min_pt.y();
-    auto middle = std::partition(first, last, [&](const auto& a) {
-        return dx * (a.y() - min_pt.y()) < (a.x() - min_pt.x()) * dy;
-    });
+    auto middle = std::partition(first, last,
+        [&](const auto& a)
+        { return dx * (a.y() - min_pt.y()) < (a.x() - min_pt.x()) * dy; });
 
     auto max_pt1 = *std::max_element(first, middle, left);
     auto middle2 = std::partition(
@@ -231,7 +225,8 @@ inline void create_test_rpolygon(FwIter&& first, FwIter&& last)
  * @return false
  */
 template <typename T>
-inline bool point_in_rpolygon(std::span<const point<T>> S, const point<T>& q)
+inline auto point_in_rpolygon(std::span<const point<T>> S, const point<T>& q)
+    -> bool
 {
     auto c = false;
     auto p0 = S.back();

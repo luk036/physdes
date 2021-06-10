@@ -8,7 +8,7 @@
 using namespace recti;
 using std::cout;
 
-int main() {
+auto main() -> int {
   auto lst = std::list<rectangle<int>>{};
 
   for (int i = 0; i < 10; ++i) {

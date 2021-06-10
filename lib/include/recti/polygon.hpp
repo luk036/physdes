@@ -2,9 +2,9 @@
 
 // #include <boost/operators.hpp>
 #include "recti.hpp"
-#include <vector>
 #include <algorithm>
 #include <span>
+#include <vector>
 
 namespace recti
 {
@@ -53,7 +53,7 @@ class polygon
      *
      * @return T
      */
-    constexpr auto signed_area_x2() const -> T
+    [[nodiscard]] constexpr auto signed_area_x2() const -> T
     {
         auto&& vs = this->_vecs;
         auto n = this->_vecs.size();
@@ -82,14 +82,14 @@ class polygon
      *
      * @return point<T>
      */
-    auto lower() const -> point<T>;
+    [[nodiscard]] auto lower() const -> point<T>;
 
     /**
      * @brief
      *
      * @return point<T>
      */
-    auto upper() const -> point<T>;
+    [[nodiscard]] auto upper() const -> point<T>;
 };
 
 /**
@@ -157,9 +157,9 @@ inline void create_xmono_polygon(FwIter&& first, FwIter&& last)
 template <typename FwIter>
 inline void create_ymono_polygon(FwIter&& first, FwIter&& last)
 {
-    return create_mono_polygon(first, last, [](const auto& a, const auto& b) {
-        return std::tie(a.y(), a.x()) < std::tie(b.y(), b.x());
-    });
+    return create_mono_polygon(first, last,
+        [](const auto& a, const auto& b)
+        { return std::tie(a.y(), a.x()) < std::tie(b.y(), b.x()); });
 }
 
 
@@ -183,7 +183,8 @@ inline void create_ymono_polygon(FwIter&& first, FwIter&& last)
  * @return false
  */
 template <typename T>
-inline bool point_in_polygon(std::span<const point<T>> S, const point<T>& q)
+inline auto point_in_polygon(std::span<const point<T>> S, const point<T>& q)
+    -> bool
 {
     auto c = false;
     auto p0 = S.back();

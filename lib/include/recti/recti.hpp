@@ -70,7 +70,7 @@ class vector2
      * @param rhs
      * @return constexpr vector2&
      */
-    constexpr auto cross(const vector2& rhs) const -> T
+    [[nodiscard]] constexpr auto cross(const vector2& rhs) const -> T
     {
         return this->_x * rhs._y - rhs._x * this->_y;
     }
