@@ -87,8 +87,9 @@ struct Fraction : boost::totally_ordered<Fraction<Z>,
         {
             return;
         }
-        if (this->_denominator < Z(0))
+        if (this->_denominator < Z(0)) {
             common = -common;
+        }
         this->_numerator /= common;
         this->_denominator /= common;
     }

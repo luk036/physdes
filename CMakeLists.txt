@@ -56,7 +56,7 @@ cmake_dependent_option(BP_BUILD_TESTS
 # It is always easier to navigate in an IDE when projects are organized in folders.
 set_property (GLOBAL PROPERTY USE_FOLDERS ON)
 
-set (CMAKE_CXX_STANDARD 20)
+set (CMAKE_CXX_STANDARD 17)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 # Don't use e.g. GNU extension (like -std=gnu++11) for portability
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -80,7 +80,7 @@ if (Boost_FOUND)
 endif (Boost_FOUND)
  
 # add_definitions ( -std=c++1z -g)
-# add_subdirectory (third_party EXCLUDE_FROM_ALL)
+add_subdirectory (external EXCLUDE_FROM_ALL)
 
 # set (LIBRARY_INCLUDE_PATH ${LIBRARY_INCLUDE_PATH} ${Boost_INCLUDE_DIRS})
 
