@@ -66,13 +66,13 @@ TEST_CASE("Rectangle test")
 
 TEST_CASE("Rectilinear test")
 {
-    constexpr auto N = 20U;
+    constexpr auto N = 20;
     auto lst = std::list<rectangle<int>> {};
 
-    for (auto i = 0U; i != N; ++i)
+    for (auto i = 0; i != N; ++i)
     {
         int ii = i * 100;
-        for (auto j = 0U; j != N; ++j)
+        for (auto j = 0; j != N; ++j)
         {
             int jj = j * 100;
             // auto xrng = interval {ii, ii + randint(50, 110)};

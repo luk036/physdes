@@ -37,7 +37,7 @@ TEST_CASE("Rectilinear Polygon test (y-mono 50)")
     auto hgenX = vdcorput(3, 7);
     auto hgenY = vdcorput(2, 11);
     auto S = std::vector<point<int>> {};
-    for (auto i = 0U; i != 50; ++i)
+    for (auto i = 0; i != 50; ++i)
     {
         S.emplace_back(point<int>(hgenX(), hgenY()));
     }

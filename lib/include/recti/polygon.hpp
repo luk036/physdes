@@ -28,11 +28,12 @@ class polygon
      * @param pointset
      */
     explicit constexpr polygon(gsl::span<const point<T>> pointset)
-        : _origin {pointset[0]}
+        : _origin {pointset.front()}
     {
-        for (auto i = 1U; i != pointset.size(); ++i)
+        auto it = pointset.begin();
+        for (++it; it != pointset.end(); ++it)
         {
-            this->_vecs.push_back(pointset[i] - this->_origin);
+            this->_vecs.push_back(*it - this->_origin);
         }
     }
 
@@ -56,10 +57,10 @@ class polygon
     [[nodiscard]] constexpr auto signed_area_x2() const -> T
     {
         auto&& vs = this->_vecs;
-        auto n = this->_vecs.size();
+        auto n = int(vs.size());
         assert(n >= 2);
         auto res = vs[0].x() * vs[1].y() - vs[n - 1].x() * vs[n - 2].y();
-        for (auto i = 1U; i != n - 1; ++i)
+        for (auto i = 1; i != n - 1; ++i)
         {
             res += vs[i].x() * (vs[i + 1].y() - vs[i - 1].y());
         }

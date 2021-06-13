@@ -27,11 +27,12 @@ class rpolygon
      * @param pointset
      */
     explicit constexpr rpolygon(gsl::span<const point<T>> pointset)
-        : _origin {pointset[0]}
+        : _origin {pointset.front()}
     {
-        for (auto i = 1U; i != pointset.size(); ++i)
+        auto it = pointset.begin();
+        for (++it; it != pointset.end(); ++it)
         {
-            this->_vecs.push_back(pointset[i] - this->_origin);
+            this->_vecs.push_back(*it - this->_origin);
         }
     }
 
